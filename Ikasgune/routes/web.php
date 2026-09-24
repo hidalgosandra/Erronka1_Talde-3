@@ -8,6 +8,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminUserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('inicio');
@@ -26,7 +27,12 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/cursos/{course}/inscribirme', [EnrollmentController::class, 'create'])->name('courses.join');
     Route::post('/cursos/{course}/inscripciones', [EnrollmentController::class, 'store'])->name('enrollments.store');
     Route::post('/admin/cursos', [AdminCourseController::class, 'store'])->middleware('can:access-admin')->name('admin.courses.store');
+    Route::put('/admin/cursos/{course}', [AdminCourseController::class, 'update'])->middleware('can:access-admin')->name('admin.courses.update');
+    Route::delete('/admin/cursos/{course}', [AdminCourseController::class, 'destroy'])->middleware('can:access-admin')->name('admin.courses.destroy');
     Route::get('/admin', [AdminController::class, 'index'])->middleware('can:access-admin')->name('admin.index');
+    Route::post('/admin/usuarios', [AdminUserController::class, 'store'])->middleware('can:access-admin')->name('admin.users.store');
+    Route::put('/admin/usuarios/{user}', [AdminUserController::class, 'update'])->middleware('can:access-admin')->name('admin.users.update');
+    Route::delete('/admin/usuarios/{user}', [AdminUserController::class, 'destroy'])->middleware('can:access-admin')->name('admin.users.destroy');
     Route::get('/mi-espacio', DashboardController::class)->name('dashboard');
     Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 });

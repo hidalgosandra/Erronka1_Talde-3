@@ -17,9 +17,9 @@ class StoreCourseRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:10000'],
-            'category' => ['required', 'string', 'max:80'],
-            'level' => ['required', 'string', 'max:80'],
-            'duration_minutes' => ['required', 'integer', 'min:15', 'max:1000'],
+            'category' => ['sometimes', 'string', 'max:80'],
+            'level' => ['sometimes', 'string', 'max:80'],
+            'duration_minutes' => ['sometimes', 'integer', 'min:15', 'max:1000'],
             'is_featured' => ['sometimes', 'boolean'],
         ];
     }

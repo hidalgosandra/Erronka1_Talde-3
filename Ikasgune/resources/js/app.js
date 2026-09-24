@@ -8,6 +8,12 @@ document.querySelectorAll('[data-confirm-logout]').forEach((form) => {
     form.addEventListener('submit', (event) => {
         if (!window.confirm('¿Quieres cerrar tu sesión?')) event.preventDefault();
     });
+
+    document.querySelectorAll('[data-confirm-delete]').forEach((form) => {
+        form.addEventListener('submit', (event) => {
+            if (!window.confirm('¿Seguro que quieres eliminar este registro?')) event.preventDefault();
+        });
+    });
 });
 
 document.querySelectorAll('form').forEach((form) => {

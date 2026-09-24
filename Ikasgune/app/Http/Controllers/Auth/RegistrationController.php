@@ -19,7 +19,14 @@ class RegistrationController extends Controller
 
     public function store(RegisterRequest $request): RedirectResponse
     {
-        $user = User::create($request->safe()->only(['name', 'email', 'password']));
+        $data = $request->safe()->only(['name', 'email', 'password']);
+        $user = User::where('email', $data['email'])->where('is_registered', false)->first();
+
+        if ($user) {
+            $user->update([...$data, 'is_registered' => true]);
+        } else {
+            $user = User::create($data + ['is_registered' => true]);
+        }
         event(new Registered($user));
         Auth::login($user);
         $request->session()->regenerate();

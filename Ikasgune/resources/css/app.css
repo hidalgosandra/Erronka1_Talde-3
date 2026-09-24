@@ -187,6 +187,15 @@ h3 { margin: 24px 0 12px; font-size: 23px; font-weight: 650; letter-spacing: -.7
 .progress-bar { height: 7px; overflow: hidden; border-radius: 999px; background: #dce8df; }
 .progress-bar span { display: block; width: 0; height: 100%; border-radius: inherit; background: #2463a0; }
 .is-submitting .button { opacity: .65; pointer-events: none; }
+.admin-record-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 22px; }
+.record-card { display: flex; flex-direction: column; gap: 16px; padding: 20px; border: 1px solid #dce6dd; border-radius: 20px; }
+.record-card h3 { margin: 10px 0 6px; }
+.record-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.record-card details { border-top: 1px solid #dce6dd; padding-top: 12px; }
+.record-card summary, .users-table summary { cursor: pointer; color: var(--blue); font-size: 13px; font-weight: 650; }
+.danger-link { color: #a32032; font-size: 12px; }
+.inline-edit { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.inline-edit input:not([type="checkbox"]) { min-width: 140px; border: 1px solid #b8c9c1; border-radius: 9px; padding: 8px; }
 .course-detail { max-width: 850px; margin-top: 28px; }
 .course-facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
 .course-facts span { padding: 7px 11px; border-radius: 999px; background: #e4eee3; color: #45634d; font-size: 12px; font-weight: 600; }
@@ -229,7 +238,7 @@ h3 { margin: 24px 0 12px; font-size: 23px; font-weight: 650; letter-spacing: -.7
     .getting-started { grid-template-columns: 1fr; gap: 28px; padding-block: 46px; }
     .coming-soon { padding-left: 20px; }
     .footer-inner { align-items: start; flex-direction: column; gap: 14px; }
-    .proof-grid, .catalog-filters, .form-grid { grid-template-columns: 1fr; }
+    .proof-grid, .catalog-filters, .form-grid, .admin-record-grid { grid-template-columns: 1fr; }
     .final-cta { align-items: start; flex-direction: column; padding: 30px; }
     .auth-section { grid-template-columns: 1fr; gap: 32px; padding-block: 36px; }
     .auth-card { padding: 24px; }
