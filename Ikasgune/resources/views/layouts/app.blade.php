@@ -26,15 +26,6 @@
     <header class="site-header">
         <div class="container header-inner">
             <a class="brand" href="{{ route('inicio') }}" aria-label="Ikasgune, inicio"><img class="brand-logo" src="{{ asset('images/ikasgune-logo.png') }}" alt="" width="48" height="48"> ikasgune<span class="brand-dot">.</span></a>
-            <nav class="desktop-nav" aria-label="Navegación secundaria">
-                <a href="{{ route('inicio') }}" @if(request()->routeIs('inicio')) aria-current="page" @endif>Inicio</a>
-                <a href="{{ route('courses.index') }}" @if(request()->routeIs('courses.*')) aria-current="page" @endif>Cursos</a>
-                @auth
-                    <a href="{{ route('dashboard') }}" @if(request()->routeIs('dashboard')) aria-current="page" @endif>Mi espacio</a>
-                @else
-                    <a class="desktop-nav-cta" href="{{ route('register') }}">Crear cuenta</a>
-                @endauth
-            </nav>
             <span class="header-caption">Un lugar para ir más allá.</span>
         </div>
     </header>
