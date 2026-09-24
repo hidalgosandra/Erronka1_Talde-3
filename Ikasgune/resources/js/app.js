@@ -20,6 +20,24 @@ document.querySelectorAll('form').forEach((form) => {
     form.addEventListener('submit', () => form.classList.add('is-submitting'));
 });
 
+const adminTabs = [...document.querySelectorAll('[data-admin-tab]')];
+if (adminTabs.length) {
+    adminTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+            const panelId = tab.dataset.adminTab;
+            adminTabs.forEach((item) => {
+                const selected = item === tab;
+                item.classList.toggle('is-active', selected);
+                item.setAttribute('aria-selected', String(selected));
+            });
+            document.querySelectorAll('.admin-panel').forEach((panel) => {
+                panel.hidden = panel.id !== panelId;
+                panel.classList.toggle('is-active', panel.id === panelId);
+            });
+        });
+    });
+}
+
 if (dock) {
     const links = [...dock.querySelectorAll('a.dock-item')];
     const items = [...dock.querySelectorAll('.dock-item')];
