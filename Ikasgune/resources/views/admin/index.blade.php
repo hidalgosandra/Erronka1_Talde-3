@@ -77,6 +77,10 @@
                 <div class="form-grid">
                     <div class="form-field"><label for="user-name">Nombre</label><input id="user-name" name="name" value="{{ old('name') }}" maxlength="255" required></div>
                     <div class="form-field"><label for="user-email">Correo electrónico</label><input id="user-email" name="email" type="email" value="{{ old('email') }}" maxlength="255" required></div>
+                    <div class="form-field"><label for="user-phone">Teléfono</label><input id="user-phone" name="phone" value="{{ old('phone') }}" maxlength="30"></div>
+                    <div class="form-field"><label for="user-birth-date">Fecha de nacimiento</label><input id="user-birth-date" name="birth_date" type="date" value="{{ old('birth_date') }}"></div>
+                    <div class="form-field"><label for="user-address">Dirección</label><input id="user-address" name="address" value="{{ old('address') }}" maxlength="255"></div>
+                    <div class="form-field"><label for="user-notes">Notas internas</label><textarea id="user-notes" name="admin_notes" rows="2" maxlength="5000">{{ old('admin_notes') }}</textarea></div>
                     <label class="checkbox-field"><input type="checkbox" name="is_admin" value="1"> Dar permisos de administrador</label>
                 </div>
                 <button class="button" type="submit">Añadir alumno</button>
@@ -91,13 +95,14 @@
             <div class="table-scroll" role="region" aria-labelledby="users-title" tabindex="0">
                 <table class="users-table">
                     <caption class="sr-only">Cuentas de Ikasgune, de más reciente a más antigua</caption>
-                    <thead><tr><th scope="col">Nombre</th><th scope="col">Correo</th><th scope="col">Rol</th><th scope="col">Fecha de alta</th></tr></thead>
+                    <thead><tr><th scope="col">Alumno</th><th scope="col">Contacto</th><th scope="col">Información</th><th scope="col">Rol y acciones</th></tr></thead>
                     <tbody>
                         @forelse($users as $user)
                             <tr>
-                                <td><strong>{{ $user->name }}</strong><details><summary>Editar</summary><form method="POST" action="{{ route('admin.users.update', $user) }}" class="inline-edit">@csrf @method('PUT')<input name="name" value="{{ $user->name }}" required><input name="email" type="email" value="{{ $user->email }}" required><label><input type="checkbox" name="is_admin" value="1" @checked($user->is_admin)> Administrador</label><button class="button button-small" type="submit">Guardar</button></form></details></td><td>{{ $user->email }}</td>
-                                <td><span class="role-badge {{ $user->is_admin ? 'role-admin' : '' }}">{{ $user->is_admin ? 'Administrador' : 'Usuario' }}</span></td>
-                                <td>{{ $user->created_at?->format('d/m/Y') ?? '—' }}<form method="POST" action="{{ route('admin.users.destroy', $user) }}" data-confirm-delete>@csrf @method('DELETE')<button class="text-link danger-link" type="submit">Eliminar</button></form></td>
+                                <td><strong>{{ $user->name }}</strong><span class="table-subtext">{{ $user->is_registered ? 'Cuenta activa' : 'Pendiente de registro' }}</span></td>
+                                <td>{{ $user->email }}<span class="table-subtext">{{ $user->phone ?: 'Sin teléfono' }}</span></td>
+                                <td><span class="table-subtext">Nacimiento: {{ $user->birth_date?->format('d/m/Y') ?? 'No indicado' }}</span><span class="table-subtext">Dirección: {{ $user->address ?: 'No indicada' }}</span>@if($user->admin_notes)<span class="table-subtext">Nota: {{ Str::limit($user->admin_notes, 60) }}</span>@endif</td>
+                                <td><span class="role-badge {{ $user->is_admin ? 'role-admin' : '' }}">{{ $user->is_admin ? 'Administrador' : 'Alumno' }}</span><details><summary>Editar ficha</summary><form method="POST" action="{{ route('admin.users.update', $user) }}" class="user-edit-form">@csrf @method('PUT')<input name="name" value="{{ $user->name }}" aria-label="Nombre" required><input name="email" type="email" value="{{ $user->email }}" aria-label="Correo electrónico" required><input name="phone" value="{{ $user->phone }}" aria-label="Teléfono"><input name="birth_date" type="date" value="{{ $user->birth_date?->format('Y-m-d') }}" aria-label="Fecha de nacimiento"><input name="address" value="{{ $user->address }}" aria-label="Dirección"><textarea name="admin_notes" rows="2" aria-label="Notas internas">{{ $user->admin_notes }}</textarea><input name="password" type="password" minlength="12" maxlength="72" autocomplete="new-password" placeholder="Nueva contraseña (opcional)" aria-label="Nueva contraseña"><input name="password_confirmation" type="password" minlength="12" maxlength="72" autocomplete="new-password" placeholder="Repite la nueva contraseña" aria-label="Repite la nueva contraseña"><label><input type="checkbox" name="is_admin" value="1" @checked($user->is_admin)> Administrador</label><button class="button button-small" type="submit">Guardar ficha</button></form></details><form method="POST" action="{{ route('admin.users.destroy', $user) }}" data-confirm-delete>@csrf @method('DELETE')<button class="text-link danger-link" type="submit">Eliminar</button></form></td>
                             </tr>
                         @empty
                             <tr><td colspan="4">Todavía no hay usuarios registrados.</td></tr>

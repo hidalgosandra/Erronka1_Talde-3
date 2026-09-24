@@ -15,6 +15,10 @@ class AdminUserController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'birth_date' => ['nullable', 'date', 'before:today'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'admin_notes' => ['nullable', 'string', 'max:5000'],
             'is_admin' => ['sometimes', 'boolean'],
         ]);
 
@@ -33,13 +37,24 @@ class AdminUserController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$user->id],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'birth_date' => ['nullable', 'date', 'before:today'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'admin_notes' => ['nullable', 'string', 'max:5000'],
+            'password' => ['nullable', 'string', 'min:12', 'max:72', 'confirmed'],
             'is_admin' => ['sometimes', 'boolean'],
         ]);
 
-        $user->update([
+        $update = [
             ...$data,
             'is_admin' => $request->boolean('is_admin'),
-        ]);
+        ];
+
+        if (blank($update['password'] ?? null)) {
+            unset($update['password']);
+        }
+
+        $user->update($update);
 
         return back()->with('status', 'Erabiltzailearen datuak eguneratu dira.');
     }

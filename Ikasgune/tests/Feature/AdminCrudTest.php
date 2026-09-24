@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Mail\RegistrationVerificationCode;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class AdminCrudTest extends TestCase
@@ -81,5 +82,30 @@ class AdminCrudTest extends TestCase
             ->assertRedirect(route('dashboard'));
 
         $this->assertDatabaseHas('users', ['email' => 'ane@example.test', 'name' => 'Ane Aranburu', 'is_registered' => true]);
+    }
+
+    public function test_admin_can_edit_student_information_and_reset_password_without_exposing_it(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $student = User::factory()->create(['password' => 'old-password-value']);
+
+        $this->actingAs($admin)->put(route('admin.users.update', $student), [
+            'name' => 'Alumno actualizado',
+            'email' => $student->email,
+            'phone' => '+34 600 000 000',
+            'birth_date' => '2000-01-15',
+            'address' => 'Calle Ikasgune 1',
+            'admin_notes' => 'Necesita seguimiento.',
+            'password' => 'new-password-value',
+            'password_confirmation' => 'new-password-value',
+        ])->assertRedirect();
+
+        $student->refresh();
+        $this->assertSame('Alumno actualizado', $student->name);
+        $this->assertSame('+34 600 000 000', $student->phone);
+        $this->assertTrue(Hash::check('new-password-value', $student->password));
+        $this->actingAs($admin)->get(route('admin.index'))
+            ->assertSee('Alumno actualizado')
+            ->assertDontSee('new-password-value');
     }
 }
