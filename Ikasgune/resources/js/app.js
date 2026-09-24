@@ -4,15 +4,52 @@ document.querySelectorAll('[data-dismiss-toast]').forEach((button) => {
     button.addEventListener('click', () => button.closest('[data-toast]')?.remove());
 });
 
+const logoutModal = document.querySelector('[data-logout-modal]');
+let logoutForm = null;
+let logoutTrigger = null;
+
+const closeLogoutModal = () => {
+    if (!logoutModal) return;
+    logoutModal.hidden = true;
+    document.body.classList.remove('modal-open');
+    logoutTrigger?.focus();
+    logoutForm = null;
+    logoutTrigger = null;
+};
+
 document.querySelectorAll('[data-confirm-logout]').forEach((form) => {
     form.addEventListener('submit', (event) => {
-        if (!window.confirm('¿Quieres cerrar tu sesión?')) event.preventDefault();
+        if (form.dataset.confirmed === 'true') {
+            delete form.dataset.confirmed;
+            return;
+        }
+        event.preventDefault();
+        logoutForm = form;
+        logoutTrigger = form.querySelector('button');
+        if (logoutModal) {
+            logoutModal.hidden = false;
+            document.body.classList.add('modal-open');
+            logoutModal.querySelector('[data-close-logout-modal]')?.focus();
+        }
     });
+});
 
-    document.querySelectorAll('[data-confirm-delete]').forEach((form) => {
-        form.addEventListener('submit', (event) => {
-            if (!window.confirm('¿Seguro que quieres eliminar este registro?')) event.preventDefault();
-        });
+logoutModal?.addEventListener('click', (event) => {
+    if (event.target === logoutModal) closeLogoutModal();
+});
+logoutModal?.querySelector('[data-close-logout-modal]')?.addEventListener('click', closeLogoutModal);
+logoutModal?.querySelector('[data-confirm-logout-action]')?.addEventListener('click', () => {
+    if (!logoutForm) return;
+    logoutForm.dataset.confirmed = 'true';
+    logoutForm.submit();
+});
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && logoutModal && !logoutModal.hidden) closeLogoutModal();
+});
+
+document.querySelectorAll('[data-confirm-delete]').forEach((form) => {
+    form.addEventListener('submit', (event) => {
+        if (!window.confirm('¿Seguro que quieres eliminar este registro?')) event.preventDefault();
     });
 });
 

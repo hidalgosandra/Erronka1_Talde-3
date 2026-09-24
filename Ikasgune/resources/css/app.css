@@ -195,6 +195,16 @@ h3 { margin: 24px 0 12px; font-size: 23px; font-weight: 650; letter-spacing: -.7
 .final-cta em { color: #2463a0; font-style: normal; }
 .toast { position: fixed; z-index: 70; right: 24px; bottom: 110px; display: flex; align-items: center; gap: 18px; max-width: min(420px, calc(100% - 48px)); padding: 15px 18px; border: 1px solid #ffffff; border-radius: 16px; background: #e4f3eacc; box-shadow: 0 14px 35px #244b4520; color: #205e50; font-size: 14px; }
 .toast button { border: 0; background: transparent; color: inherit; font-size: 22px; line-height: 1; }
+.modal-open { overflow: hidden; }
+.modal-backdrop { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 24px; background: #173c3690; backdrop-filter: blur(8px); }
+.confirm-modal { width: min(100%, 430px); padding: 34px; border: 1px solid #ffffffd9; border-radius: 28px; background: linear-gradient(145deg, #f7fbf4f7, #e9f3eeef); box-shadow: 0 28px 80px #173c3640; color: var(--ink); }
+.confirm-modal-icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 24px; border-radius: 16px; background: #dceee5; color: #205e50; }
+.confirm-modal-icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
+.confirm-modal h2 { margin: 8px 0 10px; font-size: clamp(26px, 5vw, 34px); letter-spacing: -1px; }
+.confirm-modal p:not(.eyebrow) { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.confirm-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 28px; }
+.button-secondary { background: #ffffffa8; color: var(--ink); border-color: #b8c9c1; }
+.button-secondary:hover { background: #ffffff; color: var(--ink); }
 .form-grid { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 14px; }
 .form-grid .checkbox-field { grid-column: 1 / -1; }
 .learning-panel { margin-top: 64px; }
@@ -278,6 +288,9 @@ h3 { margin: 24px 0 12px; font-size: 23px; font-weight: 650; letter-spacing: -.7
     .dock-item { min-width: 0; min-height: 56px; padding-inline: 4px; }
     .dock-item svg { width: 21px; height: 21px; }
     .dock-item span { font-size: 9px; }
+    .confirm-modal { padding: 26px 22px; border-radius: 24px; }
+    .confirm-modal-actions { flex-direction: column-reverse; }
+    .confirm-modal-actions .button { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }

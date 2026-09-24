@@ -33,6 +33,18 @@
     @if(session('status'))
         <div class="toast" role="status" data-toast>{{ session('status') }}<button type="button" aria-label="Cerrar notificación" data-dismiss-toast>×</button></div>
     @endif
+    <div class="modal-backdrop" data-logout-modal hidden>
+        <section class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title" aria-describedby="logout-modal-description">
+            <div class="confirm-modal-icon" aria-hidden="true"><svg><use href="#icon-logout"/></svg></div>
+            <p class="eyebrow">Tu espacio Ikasgune</p>
+            <h2 id="logout-modal-title">¿Quieres cerrar sesión?</h2>
+            <p id="logout-modal-description">Tu progreso queda guardado. Podrás volver cuando quieras.</p>
+            <div class="confirm-modal-actions">
+                <button class="button button-secondary" type="button" data-close-logout-modal>Seguir aquí</button>
+                <button class="button" type="button" data-confirm-logout-action>Cerrar sesión</button>
+            </div>
+        </section>
+    </div>
     <footer class="site-footer">
         <div class="container footer-inner">
             <div><a class="brand" href="{{ route('inicio') }}"><img class="brand-logo" src="{{ asset('images/ikasgune-logo.png') }}" alt="" width="48" height="48">ikasgune.</a><p>Un espacio para seguir aprendiendo.</p></div>
