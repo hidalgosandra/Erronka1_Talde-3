@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Course;
+use App\Mail\RegistrationVerificationCode;
 use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class CourseEnrollmentTest extends TestCase
@@ -39,12 +41,21 @@ class CourseEnrollmentTest extends TestCase
 
     public function test_registration_from_a_course_returns_to_the_course(): void
     {
+        Mail::fake();
         $course = Course::factory()->create();
         $this->get(route('courses.join', $course))->assertRedirect(route('login'));
         $this->post(route('register.store'), [
             'name' => 'Student', 'email' => 'student@example.test',
             'password' => 'a-long-password', 'password_confirmation' => 'a-long-password',
-        ])->assertRedirect(route('courses.join', $course));
+        ])->assertRedirect(route('register.verify'));
+        $code = null;
+        Mail::assertSent(RegistrationVerificationCode::class, function (RegistrationVerificationCode $mail) use (&$code): bool {
+            $code = $mail->code;
+
+            return true;
+        });
+        $this->post(route('register.verify.store'), ['verification_code' => $code])
+            ->assertRedirect(route('courses.join', $course));
         $this->assertAuthenticated();
         $this->assertDatabaseCount('enrollments', 0);
     }

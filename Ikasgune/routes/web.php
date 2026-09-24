@@ -18,6 +18,8 @@ Route::get('/cursos/{course}', [CourseController::class, 'show'])->name('courses
 Route::middleware('guest')->group(function (): void {
     Route::get('/register', [RegistrationController::class, 'create'])->name('register');
     Route::post('/register', [RegistrationController::class, 'store'])->middleware('throttle:5,1')->name('register.store');
+    Route::get('/register/verificar', [RegistrationController::class, 'verify'])->name('register.verify');
+    Route::post('/register/verificar', [RegistrationController::class, 'verifyStore'])->middleware('throttle:10,1')->name('register.verify.store');
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store'])->name('login.store');
 });

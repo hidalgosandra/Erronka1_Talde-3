@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Course;
 use App\Models\User;
+use App\Mail\RegistrationVerificationCode;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class AdminCrudTest extends TestCase
@@ -51,6 +53,7 @@ class AdminCrudTest extends TestCase
 
     public function test_admin_pre_registers_student_and_student_can_activate_account(): void
     {
+        Mail::fake();
         $admin = User::factory()->create(['is_admin' => true]);
 
         $this->actingAs($admin)->post(route('admin.users.store'), [
@@ -66,7 +69,16 @@ class AdminCrudTest extends TestCase
             'email' => 'ane@example.test',
             'password' => 'long-test-password',
             'password_confirmation' => 'long-test-password',
-        ])->assertRedirect(route('dashboard'));
+        ])->assertRedirect(route('register.verify'));
+
+        $code = null;
+        Mail::assertSent(RegistrationVerificationCode::class, function (RegistrationVerificationCode $mail) use (&$code): bool {
+            $code = $mail->code;
+
+            return true;
+        });
+        $this->post(route('register.verify.store'), ['verification_code' => $code])
+            ->assertRedirect(route('dashboard'));
 
         $this->assertDatabaseHas('users', ['email' => 'ane@example.test', 'name' => 'Ane Aranburu', 'is_registered' => true]);
     }

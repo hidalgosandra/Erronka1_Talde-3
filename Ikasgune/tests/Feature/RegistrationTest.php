@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Mail\RegistrationVerificationCode;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -16,24 +18,57 @@ class RegistrationTest extends TestCase
         $this->get(route('register'))->assertOk()->assertSee('Crear cuenta');
     }
 
-    public function test_registration_creates_a_normal_user_and_logs_them_in(): void
+    public function test_registration_requires_email_verification_before_creating_a_user(): void
     {
-        $this->withSession(['marker' => 'before']);
-        $previousSession = session()->getId();
+        Mail::fake();
 
         $this->post(route('register.store'), [
             'name' => 'Ander', 'email' => 'ander@example.test',
             'password' => 'long-test-password', 'password_confirmation' => 'long-test-password',
             'is_admin' => true, 'email_verified_at' => now()->toDateTimeString(),
-        ])->assertRedirect(route('dashboard'));
+        ])->assertRedirect(route('register.verify'));
+
+        Mail::assertSent(RegistrationVerificationCode::class, fn (RegistrationVerificationCode $mail): bool => $mail->hasTo('ander@example.test'));
+        $this->assertDatabaseCount('users', 0);
+        $this->assertGuest();
+    }
+
+    public function test_correct_verification_code_creates_and_logs_in_the_user(): void
+    {
+        Mail::fake();
+
+        $this->post(route('register.store'), [
+            'name' => 'Ander', 'email' => 'ander@example.test',
+            'password' => 'long-test-password', 'password_confirmation' => 'long-test-password',
+        ]);
+        $code = null;
+        Mail::assertSent(RegistrationVerificationCode::class, function (RegistrationVerificationCode $mail) use (&$code): bool {
+            $code = $mail->code;
+
+            return true;
+        });
+
+        $this->post(route('register.verify.store'), ['verification_code' => $code])
+            ->assertRedirect(route('dashboard'));
 
         $user = User::where('email', 'ander@example.test')->sole();
-        $this->assertSame('Ander', $user->name);
-        $this->assertFalse($user->is_admin);
-        $this->assertNull($user->email_verified_at);
         $this->assertTrue(Hash::check('long-test-password', $user->password));
         $this->assertAuthenticatedAs($user);
-        $this->assertNotSame($previousSession, session()->getId());
+    }
+
+    public function test_incorrect_verification_code_does_not_create_the_user(): void
+    {
+        Mail::fake();
+        $this->post(route('register.store'), [
+            'name' => 'Ander', 'email' => 'ander@example.test',
+            'password' => 'long-test-password', 'password_confirmation' => 'long-test-password',
+        ]);
+
+        $this->post(route('register.verify.store'), ['verification_code' => '000000'])
+            ->assertSessionHasErrors(['verification_code' => 'El código no es correcto.']);
+
+        $this->assertDatabaseCount('users', 0);
+        $this->assertGuest();
     }
 
     public function test_registration_rejects_duplicate_emails(): void
