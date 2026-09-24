@@ -6,6 +6,10 @@
     <meta name="theme-color" content="#f7f8f2">
     <link rel="icon" type="image/png" href="{{ asset('images/ikasgune-logo.png') }}">
     <meta name="description" content="Ikasgune, un espacio para aprender, compartir y crecer.">
+    <meta property="og:title" content="@yield('title', 'Ikasgune · Tu espacio para aprender')">
+    <meta property="og:description" content="Aprende, comparte y crece con Ikasgune.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="{{ asset('images/ikasgune-logo.png') }}">
     <title>@yield('title', 'Ikasgune · Tu espacio para aprender')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -22,10 +26,22 @@
     <header class="site-header">
         <div class="container header-inner">
             <a class="brand" href="{{ route('inicio') }}" aria-label="Ikasgune, inicio"><img class="brand-logo" src="{{ asset('images/ikasgune-logo.png') }}" alt="" width="48" height="48"> ikasgune<span class="brand-dot">.</span></a>
+            <nav class="desktop-nav" aria-label="Navegación secundaria">
+                <a href="{{ route('inicio') }}" @if(request()->routeIs('inicio')) aria-current="page" @endif>Inicio</a>
+                <a href="{{ route('courses.index') }}" @if(request()->routeIs('courses.*')) aria-current="page" @endif>Cursos</a>
+                @auth
+                    <a href="{{ route('dashboard') }}" @if(request()->routeIs('dashboard')) aria-current="page" @endif>Mi espacio</a>
+                @else
+                    <a class="desktop-nav-cta" href="{{ route('register') }}">Crear cuenta</a>
+                @endauth
+            </nav>
             <span class="header-caption">Un lugar para ir más allá.</span>
         </div>
     </header>
     <main id="contenido" tabindex="-1">@yield('content')</main>
+    @if(session('status'))
+        <div class="toast" role="status" data-toast>{{ session('status') }}<button type="button" aria-label="Cerrar notificación" data-dismiss-toast>×</button></div>
+    @endif
     <footer class="site-footer">
         <div class="container footer-inner">
             <div><a class="brand" href="{{ route('inicio') }}"><img class="brand-logo" src="{{ asset('images/ikasgune-logo.png') }}" alt="" width="48" height="48">ikasgune.</a><p>Un espacio para seguir aprendiendo.</p></div>
@@ -49,7 +65,7 @@
             <a class="dock-item" href="{{ route('dashboard') }}" @if(request()->routeIs('dashboard')) aria-current="page" @endif>
                 <svg aria-hidden="true"><use href="#icon-person"/></svg><span>Mi espacio</span>
             </a>
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout') }}" data-confirm-logout>
                 @csrf
                 <button class="dock-item" type="submit"><svg aria-hidden="true"><use href="#icon-logout"/></svg><span>Cerrar sesión</span></button>
             </form>

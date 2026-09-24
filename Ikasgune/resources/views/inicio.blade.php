@@ -27,8 +27,27 @@
             </div>
         </div>
     </section>
+    <section class="container proof-section" aria-labelledby="proof-title">
+        <div class="section-heading"><div><p class="eyebrow">IKASGUNE EN MOVIMIENTO</p><h2 id="proof-title">Pequeños pasos,<br><em>grandes cambios.</em></h2></div><p>Todo lo que necesitas para convertir la curiosidad en aprendizaje constante.</p></div>
+        <div class="proof-grid">
+            <article><strong>{{ $courseCount }}+</strong><span>cursos para descubrir</span></article>
+            <article><strong>{{ $learnerCount }}+</strong><span>personas aprendiendo</span></article>
+            <article><strong>{{ $enrollmentCount }}+</strong><span>inscripciones realizadas</span></article>
+        </div>
+    </section>
+    @if($featuredCourses->isNotEmpty())
+        <section class="container featured-section" aria-labelledby="featured-title">
+            <div class="section-heading"><div><p class="eyebrow">SELECCIÓN IKASGUNE</p><h2 id="featured-title">Empieza por aquí.</h2></div><a class="text-link" href="{{ route('courses.index') }}">Ver todos los cursos →</a></div>
+            <div class="feature-grid">
+                @foreach($featuredCourses as $course)
+                    <article class="feature-card course-card"><span class="preview-label">{{ $course->category }} · {{ $course->level }}</span><h3>{{ $course->title }}</h3><p>{{ Str::limit($course->description, 120) }}</p><span class="course-meta">{{ $course->duration_minutes }} min de aprendizaje</span><a class="button button-small" href="{{ route('courses.show', $course) }}">Ver curso →</a></article>
+                @endforeach
+            </div>
+        </section>
+    @endif
     <section id="primeros-pasos" class="container getting-started" aria-labelledby="steps-title">
         <div><p class="eyebrow">ESTO ES SOLO EL PRINCIPIO</p><h2 id="steps-title">Un nuevo espacio.<br>Mucho por descubrir.</h2></div>
         <div class="coming-soon"><span class="preview-label">CURSOS IKASGUNE</span><p>Descubre el catálogo y elige qué quieres aprender. Inicia sesión o crea una cuenta para inscribirte y consultar tus cursos.</p><a class="text-link" href="{{ route('courses.index') }}">Ver cursos <span aria-hidden="true">→</span></a></div>
     </section>
+    <section class="container final-cta" aria-labelledby="cta-title"><p class="eyebrow">TU SIGUIENTE PASO</p><h2 id="cta-title">Tu próxima idea<br><em>empieza aquí.</em></h2><a class="button" href="{{ route('courses.index') }}">Explorar el catálogo <span aria-hidden="true">↗</span></a></section>
 @endsection

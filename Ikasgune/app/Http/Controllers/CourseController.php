@@ -8,9 +8,36 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('courses.index', ['courses' => Course::latest('id')->paginate(12)]);
+        $query = Course::query();
+        $search = trim((string) $request->query('q', ''));
+
+        if ($search !== '') {
+            $query->where(fn ($builder) => $builder
+                ->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%"));
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', (string) $request->string('category'));
+        }
+
+        if ($request->filled('level')) {
+            $query->where('level', (string) $request->string('level'));
+        }
+
+        match ($request->query('sort')) {
+            'duration' => $query->orderBy('duration_minutes'),
+            'popular' => $query->withCount('enrollments')->orderByDesc('enrollments_count'),
+            default => $query->latest('id'),
+        };
+
+        return view('courses.index', [
+            'courses' => $query->paginate(12)->withQueryString(),
+            'categories' => Course::query()->distinct()->orderBy('category')->pluck('category'),
+            'levels' => Course::query()->distinct()->orderBy('level')->pluck('level'),
+        ]);
     }
 
     public function show(Request $request, Course $course): View

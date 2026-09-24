@@ -6,6 +6,7 @@
     <div class="course-detail auth-card">
         <p class="eyebrow">CURSO · IKASGUNE</p>
         <h1 id="course-title">{{ $course->title }}</h1>
+        <div class="course-facts"><span>{{ $course->category }}</span><span>{{ $course->level }}</span><span>{{ $course->duration_minutes }} min</span></div>
         @if(session('status'))<p class="auth-status" role="status">{{ session('status') }}</p>@endif
         <p class="course-description">{{ $course->description }}</p>
         @auth

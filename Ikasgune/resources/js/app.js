@@ -1,5 +1,19 @@
 const dock = document.querySelector('.bottom-nav');
 
+document.querySelectorAll('[data-dismiss-toast]').forEach((button) => {
+    button.addEventListener('click', () => button.closest('[data-toast]')?.remove());
+});
+
+document.querySelectorAll('[data-confirm-logout]').forEach((form) => {
+    form.addEventListener('submit', (event) => {
+        if (!window.confirm('¿Quieres cerrar tu sesión?')) event.preventDefault();
+    });
+});
+
+document.querySelectorAll('form').forEach((form) => {
+    form.addEventListener('submit', () => form.classList.add('is-submitting'));
+});
+
 if (dock) {
     const links = [...dock.querySelectorAll('a.dock-item')];
     const items = [...dock.querySelectorAll('.dock-item')];

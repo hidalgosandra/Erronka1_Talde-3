@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['title', 'description'])]
+#[Fillable(['title', 'description', 'category', 'level', 'duration_minutes', 'is_featured'])]
 class Course extends Model
 {
     /** @use HasFactory<CourseFactory> */

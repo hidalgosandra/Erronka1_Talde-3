@@ -6,9 +6,11 @@ use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'inicio')->name('inicio');
+Route::get('/', HomeController::class)->name('inicio');
 Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/cursos/{course}', [CourseController::class, 'show'])->name('courses.show');
 
@@ -25,6 +27,6 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/cursos/{course}/inscripciones', [EnrollmentController::class, 'store'])->name('enrollments.store');
     Route::post('/admin/cursos', [AdminCourseController::class, 'store'])->middleware('can:access-admin')->name('admin.courses.store');
     Route::get('/admin', [AdminController::class, 'index'])->middleware('can:access-admin')->name('admin.index');
-    Route::view('/mi-espacio', 'dashboard')->name('dashboard');
+    Route::get('/mi-espacio', DashboardController::class)->name('dashboard');
     Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 });

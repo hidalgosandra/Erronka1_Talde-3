@@ -27,6 +27,12 @@
                     <textarea id="description" name="description" rows="4" maxlength="10000" required @error('description') aria-invalid="true" aria-describedby="description-error" @enderror>{{ old('description') }}</textarea>
                     @error('description')<p id="description-error" class="field-error" role="alert">{{ $message }}</p>@enderror
                 </div>
+                <div class="form-grid">
+                    <div class="form-field"><label for="category">Categoría</label><input id="category" name="category" value="{{ old('category', 'General') }}" maxlength="80" required></div>
+                    <div class="form-field"><label for="level">Nivel</label><select id="level" name="level"><option>Todos los niveles</option><option>Inicial</option><option>Intermedio</option><option>Avanzado</option></select></div>
+                    <div class="form-field"><label for="duration_minutes">Duración (minutos)</label><input id="duration_minutes" name="duration_minutes" type="number" min="15" max="1000" value="{{ old('duration_minutes', 60) }}" required></div>
+                    <label class="checkbox-field"><input type="checkbox" name="is_featured" value="1" @checked(old('is_featured'))> Mostrar en destacados</label>
+                </div>
                 <div><button class="button" type="submit">Publicar curso</button> <a class="text-link" href="{{ route('courses.index') }}">Ver catálogo →</a></div>
             </form>
         </section>
