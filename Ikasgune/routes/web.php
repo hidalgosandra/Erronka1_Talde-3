@@ -1,7 +1,5 @@
 <?php
 
-Route::post('/idioma', LocaleController::class)->name('locale.update');
-
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminCourseController;
 use App\Http\Controllers\AdminUserController;
@@ -14,6 +12,8 @@ use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/idioma', LocaleController::class)->name('locale.update');
 
 Route::get('/', HomeController::class)->name('inicio');
 Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
