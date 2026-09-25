@@ -59,7 +59,7 @@ jobs:
 
       # 8. Análisis Estático (PHPStan / Larastan)
       - name: Análisis Estático de Tipos (PHPStan)
-        run: ./vendor/bin/phpstan analyse --level=5
+        run: php -d memory_limit=512M ./vendor/bin/phpstan analyse app --level=5
 
       # 9. Duplicación de Código (jscpd)
       - name: Comprobación de Código Duplicado

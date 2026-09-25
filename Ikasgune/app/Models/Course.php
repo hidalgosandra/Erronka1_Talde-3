@@ -21,7 +21,7 @@ class Course extends Model
 
     public function localized(string $field): string
     {
-        $translated = $this->translations[app()->getLocale()][$field] ?? null;
+        $translated = data_get($this->getAttribute('translations'), app()->getLocale().'.'.$field);
 
         return filled($translated) ? $translated : (string) $this->getAttribute($field);
     }
