@@ -1,0 +1,23 @@
+name: Control de Calidad y Duplicacion
+
+on:
+  push:
+    branches: [ "main", "laravel" ]
+  pull_request:
+    branches: [ "main", "laravel" ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Análisis de Código Duplicado
+        run: npx jscpd . --threshold 5
