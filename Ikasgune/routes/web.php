@@ -1,14 +1,17 @@
 <?php
 
+Route::post('/idioma', \App\Http\Controllers\LocaleController::class)->name('locale.update');
+
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminCourseController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AdminUserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('inicio');
@@ -16,6 +19,11 @@ Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index')
 Route::get('/cursos/{course}', [CourseController::class, 'show'])->name('courses.show');
 
 Route::middleware('guest')->group(function (): void {
+    Route::get('/forgot-password', [PasswordController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [PasswordController::class, 'store'])->middleware('throttle:5,1')->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordController::class, 'edit'])->name('password.reset');
+    Route::post('/reset-password', [PasswordController::class, 'update'])->middleware('throttle:10,1')->name('password.update');
+    Route::post('/register/reenviar', [RegistrationController::class, 'resend'])->middleware('throttle:1,1')->name('register.resend');
     Route::get('/register', [RegistrationController::class, 'create'])->name('register');
     Route::post('/register', [RegistrationController::class, 'store'])->middleware('throttle:5,1')->name('register.store');
     Route::get('/register/verificar', [RegistrationController::class, 'verify'])->name('register.verify');

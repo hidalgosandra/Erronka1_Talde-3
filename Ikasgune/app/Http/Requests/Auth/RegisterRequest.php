@@ -26,19 +26,19 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Introduce tu nombre.',
-            'name.string' => 'Introduce un nombre válido.',
-            'name.max' => 'El nombre no puede superar los 255 caracteres.',
-            'email.required' => 'Introduce tu correo electrónico.',
-            'email.string' => 'Introduce un correo electrónico válido.',
-            'email.email' => 'Introduce un correo electrónico válido.',
-            'email.max' => 'El correo no puede superar los 255 caracteres.',
-            'email.unique' => 'Ya existe una cuenta con ese correo.',
-            'password.required' => 'Introduce una contraseña.',
-            'password.string' => 'Introduce una contraseña válida.',
-            'password.min' => 'La contraseña debe tener al menos 12 caracteres.',
-            'password.max' => 'La contraseña no puede superar los 72 caracteres.',
-            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'name.required' => __('Introduce tu nombre.'),
+            'name.string' => __('Introduce un nombre válido.'),
+            'name.max' => __('El nombre no puede superar los 255 caracteres.'),
+            'email.required' => __('Introduce tu correo electrónico.'),
+            'email.string' => __('Introduce un correo electrónico válido.'),
+            'email.email' => __('Introduce un correo electrónico válido.'),
+            'email.max' => __('El correo no puede superar los 255 caracteres.'),
+            'email.unique' => __('Ya existe una cuenta con ese correo.'),
+            'password.required' => __('Introduce una contraseña.'),
+            'password.string' => __('Introduce una contraseña válida.'),
+            'password.min' => __('La contraseña debe tener al menos 12 caracteres.'),
+            'password.max' => __('La contraseña no puede superar los 72 caracteres.'),
+            'password.confirmed' => __('Las contraseñas no coinciden.'),
         ];
     }
 }

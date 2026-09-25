@@ -26,6 +26,6 @@ class EnrollmentController extends Controller
         $enrollment = $request->user()->enrollments()->firstOrCreate(['course_id' => $course->id]);
 
         return redirect()->route('courses.show', $course)->with('status',
-            $enrollment->wasRecentlyCreated ? 'Te has inscrito correctamente en el curso.' : 'Ya estás inscrito en este curso.');
+            $enrollment->wasRecentlyCreated ? __('Te has inscrito correctamente en el curso.') : __('Ya estás inscrito en este curso.'));
     }
 }

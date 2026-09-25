@@ -16,7 +16,9 @@ class CourseController extends Controller
         if ($search !== '') {
             $query->where(fn ($builder) => $builder
                 ->where('title', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%"));
+                ->orWhere('description', 'like', "%{$search}%")
+                ->orWhere('translations->'.app()->getLocale().'->title', 'like', "%{$search}%")
+                ->orWhere('translations->'.app()->getLocale().'->description', 'like', "%{$search}%"));
         }
 
         if ($request->filled('category')) {

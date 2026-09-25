@@ -36,6 +36,6 @@ class SessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('status', 'Has cerrado sesión correctamente.');
+        return redirect()->route('login')->with('status', __('Has cerrado sesión correctamente.'));
     }
 }

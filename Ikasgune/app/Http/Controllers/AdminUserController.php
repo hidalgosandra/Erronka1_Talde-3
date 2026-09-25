@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class AdminUserController extends Controller
 {
@@ -29,7 +31,7 @@ class AdminUserController extends Controller
             'is_registered' => false,
         ]);
 
-        return back()->with('status', 'Ikaslea gehitu da. Orain ikasleak kontu hori aktiba dezake.');
+        return back()->with('status', __('Ikaslea gehitu da. Orain ikasleak kontu hori aktiba dezake.'));
     }
 
     public function update(Request $request, User $user): RedirectResponse
@@ -54,17 +56,31 @@ class AdminUserController extends Controller
             unset($update['password']);
         }
 
-        $user->update($update);
+        DB::transaction(function () use ($user, $update): void {
+            $admins = User::where('is_admin', true)->orderBy('id')->lockForUpdate()->get();
+            $user->refresh();
+            if ($user->is_admin && ! $update['is_admin'] && ! $admins->contains(fn (User $admin): bool => $admin->id !== $user->id && (bool) $admin->is_registered)) {
+                throw ValidationException::withMessages(['is_admin' => __('Debe quedar al menos un administrador con una cuenta activa.')]);
+            }
+            $user->update($update);
+        }, 3);
 
-        return back()->with('status', 'Erabiltzailearen datuak eguneratu dira.');
+        return back()->with('status', __('Erabiltzailearen datuak eguneratu dira.'));
     }
 
     public function destroy(Request $request, User $user): RedirectResponse
     {
-        abort_if($request->user()->is($user), 422, 'Ezin duzu zure administratzaile kontua ezabatu.');
+        abort_if($request->user()->is($user), 422, __('Ezin duzu zure administratzaile kontua ezabatu.'));
 
-        $user->delete();
+        DB::transaction(function () use ($user): void {
+            $admins = User::where('is_admin', true)->orderBy('id')->lockForUpdate()->get();
+            $user->refresh();
+            if ($user->is_admin && ! $admins->contains(fn (User $admin): bool => $admin->id !== $user->id && (bool) $admin->is_registered)) {
+                throw ValidationException::withMessages(['is_admin' => __('Debe quedar al menos un administrador con una cuenta activa.')]);
+            }
+            $user->delete();
+        }, 3);
 
-        return back()->with('status', 'Erabiltzailea ezabatu da.');
+        return back()->with('status', __('Erabiltzailea ezabatu da.'));
     }
 }

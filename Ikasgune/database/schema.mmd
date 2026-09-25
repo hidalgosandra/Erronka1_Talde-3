@@ -1,0 +1,104 @@
+erDiagram
+    users {
+        bigint id PK
+        varchar name
+        varchar email UK
+        timestamp email_verified_at "nullable"
+        varchar phone "nullable"
+        date birth_date "nullable"
+        varchar address "nullable"
+        text admin_notes "nullable"
+        varchar password
+        boolean is_admin "default false"
+        boolean is_registered "default true"
+        varchar remember_token "nullable"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    courses {
+        bigint id PK
+        varchar title
+        text description
+        varchar category "default General"
+        varchar level "default Todos los niveles"
+        smallint duration_minutes "default 60"
+        boolean is_featured "default false"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    enrollments {
+        bigint id PK
+        bigint user_id FK
+        bigint course_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    password_reset_tokens {
+        varchar email PK
+        varchar token
+        timestamp created_at "nullable"
+    }
+
+    sessions {
+        varchar id PK
+        bigint user_id "nullable, indexed"
+        varchar ip_address "nullable"
+        text user_agent "nullable"
+        longtext payload
+        integer last_activity "indexed"
+    }
+
+    cache {
+        varchar key PK
+        mediumtext value
+        bigint expiration "indexed"
+    }
+
+    cache_locks {
+        varchar key PK
+        varchar owner
+        bigint expiration "indexed"
+    }
+
+    jobs {
+        bigint id PK
+        varchar queue "indexed"
+        longtext payload
+        smallint attempts
+        integer reserved_at "nullable"
+        integer available_at
+        integer created_at
+    }
+
+    job_batches {
+        varchar id PK
+        varchar name
+        integer total_jobs
+        integer pending_jobs
+        integer failed_jobs
+        longtext failed_job_ids
+        mediumtext options "nullable"
+        integer cancelled_at "nullable"
+        integer created_at
+        integer finished_at "nullable"
+    }
+
+    failed_jobs {
+        bigint id PK
+        varchar uuid UK
+        varchar connection
+        varchar queue
+        longtext payload
+        longtext exception
+        timestamp failed_at
+    }
+
+    users ||--o{ enrollments : "se matricula"
+    courses ||--o{ enrollments : "recibe matrículas"
+    users o|--o{ sessions : "mantiene sesión"
+
+    %% La restricción FK de sessions.user_id no se declara en la migración.
+    %% enrollments.user_id y enrollments.course_id tienen borrado en cascada.

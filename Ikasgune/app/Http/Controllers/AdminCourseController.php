@@ -18,20 +18,20 @@ class AdminCourseController extends Controller
             'is_featured' => false,
         ]);
 
-        return redirect()->route('courses.show', $course)->with('status', 'Curso publicado. Ya admite inscripciones.');
+        return redirect()->route('courses.show', $course)->with('status', __('Curso publicado. Ya admite inscripciones.'));
     }
 
     public function update(StoreCourseRequest $request, Course $course): RedirectResponse
     {
         $course->update([...$request->validated(), 'is_featured' => $request->boolean('is_featured')]);
 
-        return back()->with('status', 'Ikastaroa eguneratu da.');
+        return back()->with('status', __('Ikastaroa eguneratu da.'));
     }
 
     public function destroy(Course $course): RedirectResponse
     {
         $course->delete();
 
-        return back()->with('status', 'Ikastaroa ezabatu da.');
+        return back()->with('status', __('Ikastaroa ezabatu da.'));
     }
 }

@@ -12,13 +12,11 @@ class RegistrationVerificationCode extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public readonly string $code)
-    {
-    }
+    public function __construct(public readonly string $code) {}
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Tu código de verificación de Ikasgune');
+        return new Envelope(subject: 'Tu código de verificación de Eskolak');
     }
 
     public function content(): Content

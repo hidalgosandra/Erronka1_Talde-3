@@ -37,13 +37,13 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'Introduce tu correo electrónico.',
-            'email.string' => 'Introduce un correo electrónico válido.',
-            'email.email' => 'Introduce un correo electrónico válido.',
-            'email.max' => 'El correo no puede superar los 255 caracteres.',
-            'password.required' => 'Introduce tu contraseña.',
-            'password.string' => 'Introduce una contraseña válida.',
-            'remember.boolean' => 'La opción Recordarme no es válida.',
+            'email.required' => __('Introduce tu correo electrónico.'),
+            'email.string' => __('Introduce un correo electrónico válido.'),
+            'email.email' => __('Introduce un correo electrónico válido.'),
+            'email.max' => __('El correo no puede superar los 255 caracteres.'),
+            'password.required' => __('Introduce tu contraseña.'),
+            'password.string' => __('Introduce una contraseña válida.'),
+            'remember.boolean' => __('La opción Recordarme no es válida.'),
         ];
     }
 
@@ -61,7 +61,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($key, 60);
 
             throw ValidationException::withMessages([
-                'email' => 'El correo o la contraseña no son correctos.',
+                'email' => __('El correo o la contraseña no son correctos.'),
             ]);
         }
 
