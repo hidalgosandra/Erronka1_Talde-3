@@ -1,0 +1,22 @@
+name: Control de Calidad y Duplicacion
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Análisis de Código Duplicado
+        uses: kibertoad/actions-jscpd@v3
+        with:
+          threshold: "5"
+          path: "."
+          output: "report"

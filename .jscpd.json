@@ -1,0 +1,10 @@
+{
+  "threshold": 5,
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/*.spec.ts",
+    "**/*.test.js"
+  ]
+}
