@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 
 class AdminController extends Controller

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Course;
 use App\Mail\RegistrationVerificationCode;
+use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;

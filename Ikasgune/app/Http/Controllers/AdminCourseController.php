@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCourseRequest;
 use App\Models\Course;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class AdminCourseController extends Controller
 {

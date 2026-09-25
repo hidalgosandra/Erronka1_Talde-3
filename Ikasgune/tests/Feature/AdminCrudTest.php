@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Mail\RegistrationVerificationCode;
 use App\Models\Course;
 use App\Models\User;
-use App\Mail\RegistrationVerificationCode;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class AdminCrudTest extends TestCase
