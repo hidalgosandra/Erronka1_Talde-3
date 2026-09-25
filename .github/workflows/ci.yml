@@ -1,0 +1,74 @@
+name: Continuous Integration (CI)
+
+on:
+  push:
+    branches: [ "main", "laravel", "develop" ]
+  pull_request:
+    branches: [ "main", "laravel", "develop" ]
+
+jobs:
+  laravel-ci:
+    name: Build, Quality & Tests
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Ikasgune
+
+    steps:
+      # 1. Obtener el código
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      # 2. Configurar PHP con PCOV para medir cobertura rápido
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, fileinfo, mysql, pdo, pdo_mysql, sqlite3
+          coverage: pcov
+
+      # 3. Configurar Node.js
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 4. Cachear dependencias de Composer para acelerar el Action
+      - name: Cache de Composer
+        uses: actions/cache@v4
+        with:
+          path: Ikasgune/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # 5. Instalar dependencias de PHP
+      - name: Instalar dependencias de Composer
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # 6. Preparar entorno de pruebas
+      - name: Configurar entorno de Laravel
+        run: |
+          cp .env.example .env.testing
+          php artisan key:generate --env=testing
+
+      # 7. Estilo de Código (Laravel Pint)
+      - name: Formato de código (Laravel Pint)
+        run: ./vendor/bin/pint --test
+
+      # 8. Análisis Estático (PHPStan / Larastan)
+      - name: Análisis Estático de Tipos (PHPStan)
+        run: ./vendor/bin/phpstan analyse --level=5
+
+      # 9. Duplicación de Código (jscpd)
+      - name: Comprobación de Código Duplicado
+        run: npx jscpd . --threshold 5
+
+      # 10. Auditoría de Seguridad de Dependencias
+      - name: Auditoría de Seguridad en librerías
+        run: composer audit
+
+      # 11. Pruebas Unitarias y Cobertura mínima del 80%
+      - name: Ejecutar Tests con Cobertura >= 80%
+        run: php artisan test --coverage --min=80
