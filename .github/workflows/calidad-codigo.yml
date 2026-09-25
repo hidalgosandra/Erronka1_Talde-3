@@ -2,9 +2,9 @@ name: Control de Calidad y Duplicacion
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main", "laravel" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main", "laravel" ]
 
 jobs:
   code-quality:
@@ -14,9 +14,10 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      - name: Análisis de Código Duplicado
-        uses: kibertoad/actions-jscpd@v3
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
         with:
-          threshold: "5"
-          path: "."
-          output: "report"
+          node-version: '20'
+
+      - name: Análisis de Código Duplicado
+        run: npx jscpd . --threshold 5
