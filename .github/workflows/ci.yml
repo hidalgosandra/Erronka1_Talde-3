@@ -47,28 +47,35 @@ jobs:
       - name: Instalar dependencias de Composer
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      # 6. Preparar entorno de pruebas
+      # 6. Instalar dependencias y compilar los assets frontend
+      - name: Instalar dependencias de Node.js
+        run: npm install --ignore-scripts
+
+      - name: Compilar assets frontend
+        run: npm run build
+
+      # 7. Preparar entorno de pruebas
       - name: Configurar entorno de Laravel
         run: |
           cp .env.example .env.testing
           php artisan key:generate --env=testing
 
-      # 7. Estilo de Código (Laravel Pint)
+      # 8. Estilo de Código (Laravel Pint)
       - name: Formato de código (Laravel Pint)
         run: ./vendor/bin/pint --test
 
-      # 8. Análisis Estático (PHPStan / Larastan)
+      # 9. Análisis Estático (PHPStan / Larastan)
       - name: Análisis Estático de Tipos (PHPStan)
         run: php -d memory_limit=512M ./vendor/bin/phpstan analyse app --level=5
 
-      # 9. Duplicación de Código (jscpd)
+      # 10. Duplicación de Código (jscpd)
       - name: Comprobación de Código Duplicado
         run: npx jscpd . --threshold 5
 
-      # 10. Auditoría de Seguridad de Dependencias
+      # 11. Auditoría de Seguridad de Dependencias
       - name: Auditoría de Seguridad en librerías
         run: composer audit
 
-      # 11. Pruebas Unitarias y Cobertura mínima del 80%
+      # 12. Pruebas Unitarias y Cobertura mínima del 80%
       - name: Ejecutar Tests con Cobertura >= 80%
         run: php artisan test --coverage --min=80
