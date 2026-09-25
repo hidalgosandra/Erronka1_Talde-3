@@ -20,11 +20,11 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      # 2. Configurar PHP con PCOV para medir cobertura rápido
+      # Configurar PHP con la versión 8.4
       - name: Configurar PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4' # <--- Cambiar aquí a '8.4'
           extensions: mbstring, dom, fileinfo, mysql, pdo, pdo_mysql, sqlite3
           coverage: pcov
 
