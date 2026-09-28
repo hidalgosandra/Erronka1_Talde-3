@@ -16,11 +16,14 @@ class RegistrationVerificationCode extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Tu código de verificación de Eskolak');
+        return new Envelope(subject: __('Tu código de verificación de Eskolak'));
     }
 
     public function content(): Content
     {
-        return new Content(view: 'emails.registration-verification');
+        return new Content(
+            view: 'emails.registration-verification',
+            text: 'emails.registration-verification-text',
+        );
     }
 }

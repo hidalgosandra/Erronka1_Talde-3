@@ -308,5 +308,12 @@
     "Pendiente de registro": "Pendiente de registro",
     "Sin teléfono": "Sin teléfono",
     "No indicado": "No indicado",
-    "No indicada": "No indicada"
+    "No indicada": "No indicada",
+    "Tu código de verificación de Eskolak": "Tu código de verificación de Eskolak",
+    "Has agotado los intentos. Solicita un nuevo código.": "Has agotado los intentos. Solicita un nuevo código.",
+    "1. Registro · 2. Recibir código · 3. Verificar correo": "1. Registro · 2. Recibir código · 3. Verificar correo",
+    "Te enviaremos un código de 6 dígitos a esta dirección para activar tu cuenta.": "Te enviaremos un código de 6 dígitos a esta dirección para activar tu cuenta.",
+    "Revisa tu bandeja de entrada y la carpeta de spam. Introduce el código en esta misma ventana.": "Revisa tu bandeja de entrada y la carpeta de spam. Introduce el código en esta misma ventana.",
+    "Dispones de 5 intentos por código. Puedes reenviarlo si caduca o agotas los intentos.": "Dispones de 5 intentos por código. Puedes reenviarlo si caduca o agotas los intentos.",
+    "Vuelve a la ventana donde te has registrado para introducirlo. No compartas este código.": "Vuelve a la ventana donde te has registrado para introducirlo. No compartas este código."
 }

@@ -34,6 +34,7 @@ class RegistrationController extends Controller
             'password' => Hash::make($data['password']),
             'code' => Hash::make($code),
             'expires_at' => now()->addMinutes(10)->timestamp,
+            'attempts' => 0,
         ]);
 
         return redirect()->route('register.verify')->with('status', __('Te hemos enviado un código de verificación.'));
@@ -58,6 +59,7 @@ class RegistrationController extends Controller
         MailDelivery::send(fn () => Mail::to($registration['email'])->send(new RegistrationVerificationCode($code)), 'verification_code');
         $registration['code'] = Hash::make($code);
         $registration['expires_at'] = now()->addMinutes(10)->timestamp;
+        $registration['attempts'] = 0;
         $request->session()->put('registration', $registration);
 
         return redirect()->route('register.verify')->with('status', __('Hemos enviado un nuevo código. El anterior ya no es válido.'));
@@ -78,11 +80,22 @@ class RegistrationController extends Controller
             'verification_code.digits' => __('El código debe tener 6 dígitos.'),
         ]);
 
-        if (($registration['expires_at'] ?? 0) < now()->timestamp) {
+        if (($registration['expires_at'] ?? 0) <= now()->timestamp) {
             return back()->withErrors(['verification_code' => __('El código ha caducado. Solicita uno nuevo.')]);
         }
 
+        if (($registration['attempts'] ?? 0) >= 5) {
+            return back()->withErrors(['verification_code' => __('Has agotado los intentos. Solicita un nuevo código.')]);
+        }
+
         if (! Hash::check((string) $request->string('verification_code'), $registration['code'])) {
+            $registration['attempts'] = ($registration['attempts'] ?? 0) + 1;
+            $request->session()->put('registration', $registration);
+
+            if ($registration['attempts'] >= 5) {
+                return back()->withErrors(['verification_code' => __('Has agotado los intentos. Solicita un nuevo código.')]);
+            }
+
             return back()->withErrors(['verification_code' => __('El código no es correcto.')]);
         }
 

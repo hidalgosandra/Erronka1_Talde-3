@@ -13,6 +13,7 @@
         <div class="auth-card">
             <h2>{{ __('Crear cuenta') }}</h2>
             <p class="auth-description">{{ __('Completa tus datos para empezar.') }}</p>
+            <p class="auth-description">{{ __('1. Registro · 2. Recibir código · 3. Verificar correo') }}</p>
             <form method="POST" action="{{ route('register.store') }}" class="auth-form">
                 @csrf
                 <div class="form-field">
@@ -23,6 +24,7 @@
                 <div class="form-field">
                     <label for="email">{{ __('Correo electrónico') }}</label>
                     <input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" required maxlength="255" @error('email') aria-invalid="true" aria-describedby="email-error" @enderror>
+                    <p class="auth-description">{{ __('Te enviaremos un código de 6 dígitos a esta dirección para activar tu cuenta.') }}</p>
                     @error('email')<p id="email-error" class="field-error" role="alert">{{ $message }}</p>@enderror
                 </div>
                 <div class="form-field">

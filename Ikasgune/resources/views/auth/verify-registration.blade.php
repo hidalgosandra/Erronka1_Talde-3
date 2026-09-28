@@ -13,6 +13,8 @@
         <div class="auth-card">
             <h2>{{ __('Introduce el código') }}</h2>
             <p class="auth-description">{{ __('El código es válido durante 10 minutos.') }}</p>
+            <p class="auth-description">{{ __('Revisa tu bandeja de entrada y la carpeta de spam. Introduce el código en esta misma ventana.') }}</p>
+            <p class="auth-description">{{ __('Dispones de 5 intentos por código. Puedes reenviarlo si caduca o agotas los intentos.') }}</p>
             <form method="POST" action="{{ route('register.verify.store') }}" class="auth-form">
                 @csrf
                 <div class="form-field">

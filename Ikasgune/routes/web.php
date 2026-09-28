@@ -24,11 +24,11 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/forgot-password', [PasswordController::class, 'store'])->middleware('throttle:5,1')->name('password.email');
     Route::get('/reset-password/{token}', [PasswordController::class, 'edit'])->name('password.reset');
     Route::post('/reset-password', [PasswordController::class, 'update'])->middleware('throttle:10,1')->name('password.update');
-    Route::post('/register/reenviar', [RegistrationController::class, 'resend'])->middleware('throttle:1,1')->name('register.resend');
+    Route::post('/register/reenviar', [RegistrationController::class, 'resend'])->middleware('throttle:1,1')->block(30, 10)->name('register.resend');
     Route::get('/register', [RegistrationController::class, 'create'])->name('register');
-    Route::post('/register', [RegistrationController::class, 'store'])->middleware('throttle:5,1')->name('register.store');
+    Route::post('/register', [RegistrationController::class, 'store'])->middleware('throttle:5,1')->block(30, 10)->name('register.store');
     Route::get('/register/verificar', [RegistrationController::class, 'verify'])->name('register.verify');
-    Route::post('/register/verificar', [RegistrationController::class, 'verifyStore'])->middleware('throttle:10,1')->name('register.verify.store');
+    Route::post('/register/verificar', [RegistrationController::class, 'verifyStore'])->middleware('throttle:10,1')->block(30, 10)->name('register.verify.store');
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store'])->name('login.store');
 });
