@@ -27,16 +27,21 @@
         <div class="container header-inner">
             <a class="brand" href="{{ route('inicio') }}" aria-label="{{ __('Eskolak, inicio') }}"><img class="brand-logo" src="{{ asset('images/ikasgune-logo.png') }}" alt="" width="48" height="48"> eskolak<span class="brand-dot">.</span></a>
             <span class="header-caption">{{ __('Un lugar para ir más allá.') }}</span>
-            <form class="language-switcher" method="POST" action="{{ route('locale.update') }}">
+            <form class="language-switcher" method="POST" action="{{ route('locale.update') }}" aria-label="{{ __('Cambiar idioma') }}">
                 @csrf
                 <input type="hidden" name="return_to" value="{{ request()->getRequestUri() }}">
-                <label class="sr-only" for="locale">{{ __('Idioma') }}</label>
-                <select id="locale" name="locale">
-                    <option value="es" lang="es" @selected(app()->getLocale() === 'es')>Castellano</option>
-                    <option value="eu" lang="eu" @selected(app()->getLocale() === 'eu')>Euskera</option>
-                    <option value="en" lang="en" @selected(app()->getLocale() === 'en')>English</option>
-                </select>
-                <button type="submit" aria-label="{{ __('Cambiar idioma') }}">→</button>
+                <span class="language-switcher-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>
+                </span>
+                <div class="language-options" role="group" aria-label="{{ __('Idioma') }}">
+                    @foreach(['es' => 'Castellano', 'eu' => 'Euskera', 'en' => 'English'] as $locale => $label)
+                        <button class="language-option" type="submit" name="locale" value="{{ $locale }}" lang="{{ $locale }}" aria-label="{{ $label }}" aria-pressed="{{ app()->getLocale() === $locale ? 'true' : 'false' }}" title="{{ $label }}">
+                            <span class="language-option-name">{{ $label }}</span>
+                            <span class="language-option-code" aria-hidden="true">{{ strtoupper($locale) }}</span>
+                            <span class="language-option-dot" aria-hidden="true"></span>
+                        </button>
+                    @endforeach
+                </div>
             </form>
         </div>
     </header>
