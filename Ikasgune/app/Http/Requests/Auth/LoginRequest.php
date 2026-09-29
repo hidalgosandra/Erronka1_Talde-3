@@ -57,7 +57,7 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        if (! Auth::attempt($this->safe()->only(['email', 'password']), $this->boolean('remember'))) {
+        if (! Auth::attempt($this->safe()->only(['email', 'password']) + ['is_registered' => true], $this->boolean('remember'))) {
             RateLimiter::hit($key, 60);
 
             throw ValidationException::withMessages([

@@ -62,7 +62,17 @@ class AdminUserController extends Controller
             if ($user->is_admin && ! $update['is_admin'] && ! $admins->contains(fn (User $admin): bool => $admin->id !== $user->id && (bool) $admin->is_registered)) {
                 throw ValidationException::withMessages(['is_admin' => __('Debe quedar al menos un administrador con una cuenta activa.')]);
             }
+            if (isset($update['password'])) {
+                $user->setRememberToken(Str::random(60));
+            }
             $user->update($update);
+
+            if (isset($update['password']) && config('session.driver') === 'database') {
+                DB::connection(config('session.connection'))
+                    ->table(config('session.table', 'sessions'))
+                    ->where('user_id', $user->id)
+                    ->delete();
+            }
         }, 3);
 
         return back()->with('status', __('Erabiltzailearen datuak eguneratu dira.'));
