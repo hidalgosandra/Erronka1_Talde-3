@@ -1,11 +1,15 @@
 @extends('layouts.app')
 @section('title', __('Cursos · Eskolak'))
 @section('content')
+<div class="courses-page">
 <section class="container dashboard-section" aria-labelledby="courses-title">
     <p class="eyebrow">{{ __('APRENDE A TU RITMO · ESKOLAK') }}</p>
     <h1 id="courses-title">{{ __('Encuentra tu próximo') }} <em>{{ __('curso.') }}</em></h1>
     <p class="hero-description">{{ __('Consulta los cursos disponibles. Para inscribirte necesitas una cuenta e iniciar sesión.') }}</p>
     @auth
+        @if(auth()->user()->isStudent())
+            <p class="auth-description">{{ __('Clase') }}: {{ auth()->user()->schoolClass?->name }} · <a class="text-link" href="{{ route('profile.edit') }}">{{ __('Editar perfil académico') }}</a></p>
+        @endif
         <div class="hero-actions"><a class="text-link" href="{{ route('courses.mine') }}">{{ __('Mis cursos →') }}</a></div>
     @endauth
     <form class="catalog-filters auth-card" method="GET" action="{{ route('courses.index') }}">
@@ -34,4 +38,5 @@
     </div>
     <div class="admin-pagination">{{ $courses->links() }}</div>
 </section>
+</div>
 @endsection

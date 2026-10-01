@@ -8,6 +8,9 @@
         <h1 id="dashboard-title">{{ __('Hola,') }} {{ auth()->user()->name }}.</h1>
         <p class="hero-description">{{ __('Continúa donde lo dejaste y convierte cada sesión en un nuevo avance.') }}</p>
         <div class="admin-stats dashboard-stats"><article class="auth-card"><h2>{{ __('En progreso') }}</h2><p class="stat-value">{{ $enrollments->count() }}</p><span class="auth-description">{{ __('cursos guardados') }}</span></article><article class="auth-card"><h2>{{ __('Completados') }}</h2><p class="stat-value">0</p><span class="auth-description">{{ __('sigue aprendiendo') }}</span></article><article class="auth-card"><h2>{{ __('Racha') }}</h2><p class="stat-value">1 <small>{{ __('día') }}</small></p><span class="auth-description">{{ __('vuelve mañana') }}</span></article></div>
+        @if(auth()->user()->isStudent())
+            <p class="auth-description">{{ __('Clase') }}: {{ auth()->user()->schoolClass?->name }} · <a class="text-link" href="{{ route('profile.edit') }}">{{ __('Editar perfil académico') }}</a></p>
+        @endif
         <div class="auth-card account-card">
             <div class="account-details">
                 <div class="account-heading"><span class="account-avatar" aria-hidden="true">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span><div><p class="eyebrow">{{ __('PERFIL ESKOLAK') }}</p><h2>{{ __('Tu cuenta') }}</h2></div></div>

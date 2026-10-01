@@ -10,7 +10,7 @@ class CourseController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Course::query();
+        $query = Course::query()->visibleTo($request->user());
         $search = trim((string) $request->query('q', ''));
 
         if ($search !== '') {
@@ -37,16 +37,22 @@ class CourseController extends Controller
 
         return view('courses.index', [
             'courses' => $query->paginate(12)->withQueryString(),
-            'categories' => Course::query()->distinct()->orderBy('category')->pluck('category'),
-            'levels' => Course::query()->distinct()->orderBy('level')->pluck('level'),
+            'categories' => Course::query()->visibleTo($request->user())->distinct()->orderBy('category')->pluck('category'),
+            'levels' => Course::query()->visibleTo($request->user())->distinct()->orderBy('level')->pluck('level'),
         ]);
     }
 
     public function show(Request $request, Course $course): View
     {
+        $user = $request->user();
+        abort_unless(Course::query()->visibleTo($user)->whereKey($course->id)->exists(), 404);
+        $isEnrolled = $user?->enrollments()->where('course_id', $course->id)->exists() ?? false;
+        $canViewMaterials = $user !== null && ($user->can('access-admin') || $isEnrolled || ($user->is_teacher && $course->teacher_id === $user->id));
+
         return view('courses.show', [
             'course' => $course,
-            'isEnrolled' => $request->user()?->enrollments()->where('course_id', $course->id)->exists() ?? false,
+            'isEnrolled' => $isEnrolled,
+            'materials' => $canViewMaterials ? $course->materials()->latest('id')->get() : collect(),
         ]);
     }
 }

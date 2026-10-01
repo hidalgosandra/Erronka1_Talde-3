@@ -15,6 +15,7 @@ class AdminCourseController extends Controller
             'level' => 'Todos los niveles',
             'duration_minutes' => 60,
             'is_featured' => false,
+            'teacher_id' => $request->validated('teacher_id'),
         ]);
 
         return redirect()->route('courses.show', $course)->with('status', __('Curso publicado. Ya admite inscripciones.'));

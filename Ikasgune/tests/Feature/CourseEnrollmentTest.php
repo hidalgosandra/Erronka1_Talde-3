@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Mail\RegistrationVerificationCode;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\SchoolClass;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -32,6 +33,7 @@ class CourseEnrollmentTest extends TestCase
     {
         $course = Course::factory()->create();
         $user = User::factory()->create();
+        $this->assignClass($user, $course);
         $this->get(route('courses.join', $course))->assertRedirect(route('login'));
         $this->post(route('login.store'), ['email' => $user->email, 'password' => 'password'])
             ->assertRedirect(route('courses.join', $course));
@@ -66,6 +68,7 @@ class CourseEnrollmentTest extends TestCase
         $otherCourse = Course::factory()->create();
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
+        $this->assignClass($user, $course);
         $this->actingAs($user)->post(route('enrollments.store', $course), [
             'user_id' => $otherUser->id, 'course_id' => $otherCourse->id,
         ])->assertRedirect(route('courses.show', $course))
@@ -81,6 +84,7 @@ class CourseEnrollmentTest extends TestCase
     {
         $own = Enrollment::factory()->create();
         $other = Enrollment::factory()->create();
+        $this->assignClass($own->user, $own->course);
         $this->actingAs($own->user)->get(route('courses.mine'))
             ->assertOk()->assertSee($own->course->title)->assertDontSee($other->course->title);
     }
@@ -120,5 +124,14 @@ class CourseEnrollmentTest extends TestCase
                 'description' => 'Introduce la descripción del curso.',
             ]);
         $this->assertDatabaseCount('courses', 0);
+    }
+
+    private function assignClass(User $student, Course $course): void
+    {
+        $teacher = User::factory()->create(['is_teacher' => true]);
+        $schoolClass = SchoolClass::factory()->create();
+        $schoolClass->teachers()->attach($teacher);
+        $course->update(['teacher_id' => $teacher->id]);
+        $student->update(['school_class_id' => $schoolClass->id, 'birth_date' => '2005-01-01']);
     }
 }

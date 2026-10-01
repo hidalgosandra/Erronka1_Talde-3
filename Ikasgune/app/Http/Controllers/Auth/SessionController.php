@@ -27,6 +27,12 @@ class SessionController extends Controller
             return redirect()->route('admin.index');
         }
 
+        if ($request->user()->is_teacher) {
+            $request->session()->forget('url.intended');
+
+            return redirect()->route('teacher.index');
+        }
+
         return redirect()->intended(route('dashboard'));
     }
 

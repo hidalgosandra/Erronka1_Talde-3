@@ -10,7 +10,7 @@ class DashboardController extends Controller
     public function __invoke(Request $request): View
     {
         return view('dashboard', [
-            'enrollments' => $request->user()->enrollments()->with('course')->latest('id')->get(),
+            'enrollments' => $request->user()->enrollments()->whereHas('course', fn ($courses) => $courses->visibleTo($request->user()))->with('course')->latest('id')->get(),
         ]);
     }
 }

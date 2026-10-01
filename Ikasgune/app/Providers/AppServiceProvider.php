@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Course;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -24,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('access-admin', fn (User $user): bool => $user->is_admin === true);
+        Gate::define('access-teacher', fn (User $user): bool => $user->is_teacher === true);
+        Gate::define('manage-course', fn (User $user, Course $course): bool => $user->is_teacher === true && $course->teacher_id === $user->id);
         ResetPassword::toMailUsing(function (User $user, string $token): MailMessage {
             $url = rtrim(config('app.url'), '/').route('password.reset', ['token' => $token, 'email' => $user->email], false);
 

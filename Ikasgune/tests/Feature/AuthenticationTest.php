@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\SchoolClass;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -108,7 +109,7 @@ class AuthenticationTest extends TestCase
 
     public function test_private_page_escapes_the_user_name(): void
     {
-        $user = User::factory()->create(['name' => '<script>alert(1)</script>']);
+        $user = User::factory()->inClass(SchoolClass::factory()->create())->create(['name' => '<script>alert(1)</script>']);
 
         $this->actingAs($user)->get(route('dashboard'))
             ->assertSee($user->name)

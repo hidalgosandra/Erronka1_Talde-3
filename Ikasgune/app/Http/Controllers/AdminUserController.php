@@ -19,15 +19,18 @@ class AdminUserController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['nullable', 'string', 'max:30'],
             'birth_date' => ['nullable', 'date', 'before:today'],
+            'school_class_id' => ['nullable', 'integer', 'exists:school_classes,id'],
             'address' => ['nullable', 'string', 'max:255'],
             'admin_notes' => ['nullable', 'string', 'max:5000'],
             'is_admin' => ['sometimes', 'boolean'],
+            'is_teacher' => ['sometimes', 'boolean'],
         ]);
 
         User::create([
             ...$data,
             'password' => Hash::make(Str::random(48)),
             'is_admin' => $request->boolean('is_admin'),
+            'is_teacher' => $request->boolean('is_teacher'),
             'is_registered' => false,
         ]);
 
@@ -41,15 +44,18 @@ class AdminUserController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'phone' => ['nullable', 'string', 'max:30'],
             'birth_date' => ['nullable', 'date', 'before:today'],
+            'school_class_id' => ['nullable', 'integer', 'exists:school_classes,id'],
             'address' => ['nullable', 'string', 'max:255'],
             'admin_notes' => ['nullable', 'string', 'max:5000'],
             'password' => ['nullable', 'string', 'min:12', 'max:72', 'confirmed'],
             'is_admin' => ['sometimes', 'boolean'],
+            'is_teacher' => ['sometimes', 'boolean'],
         ]);
 
         $update = [
             ...$data,
             'is_admin' => $request->boolean('is_admin'),
+            'is_teacher' => $request->boolean('is_teacher'),
         ];
 
         if (blank($update['password'] ?? null)) {
@@ -66,6 +72,10 @@ class AdminUserController extends Controller
                 $user->setRememberToken(Str::random(60));
             }
             $user->update($update);
+            if (! $update['is_teacher']) {
+                $user->teachingCourses()->update(['teacher_id' => null]);
+                $user->teachingClasses()->detach();
+            }
 
             if (isset($update['password']) && config('session.driver') === 'database') {
                 DB::connection(config('session.connection'))
