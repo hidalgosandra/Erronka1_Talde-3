@@ -4,8 +4,9 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 
 const source = readFileSync(new URL('../../resources/js/app.js', import.meta.url), 'utf8');
+const themeSource = readFileSync(new URL('../../resources/js/theme.js', import.meta.url), 'utf8');
 
-function setup({ savedTheme = null, systemDark = false, blockedStorage = false } = {}) {
+function setup({ savedTheme = null, systemDark = false, blockedStorage = false, loading = false, withoutBundle = false } = {}) {
     let document;
     class Element extends EventTarget {
         constructor() {
@@ -78,7 +79,7 @@ function setup({ savedTheme = null, systemDark = false, blockedStorage = false }
     modal.querySelectorAll = () => [cancel, confirm];
     document = new EventTarget();
     Object.assign(document, {
-        body, activeElement: trigger, documentElement,
+        body, activeElement: trigger, documentElement, readyState: loading ? 'loading' : 'complete',
         querySelector: (selector) => ({
             '[data-logout-modal]': modal,
             '[data-theme-toggle]': themeToggle,
@@ -91,7 +92,7 @@ function setup({ savedTheme = null, systemDark = false, blockedStorage = false }
             '[data-admin-tab]': tabs, '.admin-panel': panels,
         }[selector] ?? []),
     });
-    runInNewContext(source, {
+    runInNewContext(themeSource + (withoutBundle ? '' : source), {
         document, window, HTMLElement: Element, queueMicrotask, URL, localStorage,
         location: { href: 'http://localhost/admin' },
         history: { replaceState: (_state, _title, url) => { lastUrl = url; } },
@@ -220,4 +221,19 @@ test('theme switching works with unavailable storage', () => {
     assert.equal(ui.document.documentElement.dataset.theme, 'dark');
     ui.themeOptions[0].dispatchEvent(new Event('click'));
     assert.equal(ui.document.documentElement.dataset.theme, 'light');
+    ui.window.dispatchEvent(new Event('pageshow'));
+    assert.equal(ui.document.documentElement.dataset.theme, 'light');
+});
+
+test('dark page and selector agree after DOM loads even without the Vite bundle', () => {
+    const ui = setup({ savedTheme: 'dark', loading: true, withoutBundle: true });
+    assert.equal(ui.document.documentElement.dataset.theme, 'dark');
+    ui.document.dispatchEvent(new Event('DOMContentLoaded'));
+    assert.equal(ui.themeOptions[0].attributes['aria-pressed'], 'false');
+    assert.equal(ui.themeOptions[1].attributes['aria-pressed'], 'true');
+    ui.themeOptions[0].dispatchEvent(new Event('click'));
+    assert.equal(ui.document.documentElement.dataset.theme, 'light');
+    assert.equal(ui.themeOptions[0].attributes['aria-pressed'], 'true');
+    assert.equal(ui.themeOptions[1].attributes['aria-pressed'], 'false');
+    assert.equal(ui.localStorage.getItem('eskolak-theme'), 'light');
 });

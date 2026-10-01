@@ -12,14 +12,7 @@
     <meta property="og:image" content="{{ asset('images/ikasgune-logo.png') }}">
     <title>@yield('title', __('Eskolak · Tu espacio para aprender'))</title>
     <script>
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        try {
-            const savedTheme = localStorage.getItem('eskolak-theme');
-            document.documentElement.dataset.theme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : (prefersDark ? 'dark' : 'light');
-        } catch {
-            document.documentElement.dataset.theme = prefersDark ? 'dark' : 'light';
-        }
-        document.querySelector('[data-theme-color]').content = document.documentElement.dataset.theme === 'dark' ? '#000000' : '#f7f8f2';
+        {!! file_get_contents(resource_path('js/theme.js')) !!}
     </script>
     @php
         $pageVite = clone app(\Illuminate\Foundation\Vite::class);
@@ -78,7 +71,7 @@
                 <p class="island-label">{{ __('Cambiar tema') }}</p>
                 <fieldset class="theme-toggle header-theme-toggle" data-theme-toggle>
                     <legend class="sr-only">{{ __('Cambiar tema') }}</legend>
-                    <button class="theme-option" type="button" data-set-theme="light" aria-label="{{ __('Tema claro') }}" aria-pressed="true" title="{{ __('Tema claro') }}">
+                    <button class="theme-option" type="button" data-set-theme="light" aria-label="{{ __('Tema claro') }}" aria-pressed="false" title="{{ __('Tema claro') }}">
                         <svg aria-hidden="true"><use href="#icon-sun"/></svg><span>{{ __('Claro') }}</span>
                     </button>
                     <button class="theme-option" type="button" data-set-theme="dark" aria-label="{{ __('Tema oscuro') }}" aria-pressed="false" title="{{ __('Tema oscuro') }}">

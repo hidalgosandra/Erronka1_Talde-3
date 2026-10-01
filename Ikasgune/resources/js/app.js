@@ -1,5 +1,4 @@
 const dock = document.querySelector('.bottom-nav');
-const themeToggle = document.querySelector('[data-theme-toggle]');
 const preferencesIsland = document.querySelector('[data-preferences-island]');
 
 if (preferencesIsland) {
@@ -15,45 +14,6 @@ if (preferencesIsland) {
     });
     preferencesIsland.addEventListener('focusout', (event) => {
         if (event.relatedTarget && !preferencesIsland.contains(event.relatedTarget)) preferencesIsland.open = false;
-    });
-}
-
-if (themeToggle) {
-    const themeOptions = [...themeToggle.querySelectorAll('[data-set-theme]')];
-    const systemTheme = window.matchMedia?.('(prefers-color-scheme: dark)');
-    const readTheme = () => {
-        try {
-            const saved = localStorage.getItem('eskolak-theme');
-            if (saved === 'dark' || saved === 'light') return saved;
-        } catch { /* Storage may be unavailable in private browsing. */ }
-        return systemTheme?.matches ? 'dark' : 'light';
-    };
-    const setTheme = (theme, persist = true) => {
-        const isDark = theme === 'dark';
-        document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
-        themeOptions.forEach((option) => {
-            option.setAttribute('aria-pressed', String(option.dataset.setTheme === (isDark ? 'dark' : 'light')));
-        });
-        document.querySelector('[data-theme-color]')?.setAttribute('content', isDark ? '#000000' : '#f7f8f2');
-
-        if (persist) {
-            try {
-                localStorage.setItem('eskolak-theme', isDark ? 'dark' : 'light');
-            } catch {
-                return;
-            }
-        }
-    };
-
-    const syncTheme = () => setTheme(readTheme(), false);
-    syncTheme();
-    window.addEventListener('pageshow', syncTheme);
-    window.addEventListener('storage', (event) => {
-        if (event.key === 'eskolak-theme' || event.key === null) syncTheme();
-    });
-    systemTheme?.addEventListener('change', syncTheme);
-    themeOptions.forEach((option) => {
-        option.addEventListener('click', () => setTheme(option.dataset.setTheme));
     });
 }
 
