@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="hero container" aria-labelledby="hero-title">
+    <div class="home-page">
+    <section class="hero container home-hero" aria-labelledby="hero-title">
         <div class="hero-copy">
             <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> {{ __('ONGI ETORRI · BIENVENIDO/A') }}</p>
             <h1 id="hero-title">{{ __('Tu próximo paso') }}<br>{{ __('empieza') }} <em>{{ __('aquí.') }}</em></h1>
@@ -9,12 +10,8 @@
             <div class="hero-actions"><a class="button" href="{{ route('courses.index') }}">{{ __('Explorar cursos') }} <span aria-hidden="true">↗</span></a><a class="text-link" href="#espacio">{{ __('Conócenos') }} <span aria-hidden="true">→</span></a></div>
             <p class="hero-note">{{ __('Curiosidad para empezar. Un lugar para crecer.') }}</p>
         </div>
-        <div class="hero-art" aria-hidden="true">
-            <div class="art-grid"></div><span class="art-label">{{ __('IDEAS QUE CRECEN') }}</span>
-            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
-            <div class="learning-card"><span>01 / ESKOLAK</span><strong>{{ __('Aprende.') }}<br>{{ __('Comparte.') }}<br><em>{{ __('Crece.') }}</em></strong><span class="card-arrow">↗</span></div>
-            <div class="floating-note"><span>✳</span> {{ __('Cada idea es') }}<br>{{ __('un nuevo comienzo.') }}</div>
-            <span class="art-bottom">{{ __('EL FUTURO SE CONSTRUYE APRENDIENDO') }}</span>
+        <div class="home-hero-media">
+            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=2400&q=85" alt="Estudiantes aprendiendo y compartiendo ideas" fetchpriority="high">
         </div>
     </section>
     <section id="espacio" class="space-section" aria-labelledby="space-title">
@@ -62,4 +59,5 @@
         <div class="coming-soon"><span class="preview-label">{{ __('CURSOS ESKOLAK') }}</span><p>{{ __('Descubre el catálogo y elige qué quieres aprender. Inicia sesión o crea una cuenta para inscribirte y consultar tus cursos.') }}</p><a class="text-link" href="{{ route('courses.index') }}">{{ __('Ver cursos') }} <span aria-hidden="true">→</span></a></div>
     </section>
     <section class="container final-cta" aria-labelledby="cta-title"><p class="eyebrow">{{ __('TU SIGUIENTE PASO') }}</p><h2 id="cta-title">{{ __('Tu próxima idea') }}<br><em>{{ __('empieza aquí.') }}</em></h2><a class="button" href="{{ route('courses.index') }}">{{ __('Explorar el catálogo') }} <span aria-hidden="true">↗</span></a></section>
+    </div>
 @endsection

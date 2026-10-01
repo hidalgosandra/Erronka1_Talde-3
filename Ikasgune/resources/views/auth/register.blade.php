@@ -3,6 +3,7 @@
 @section('title', __('Crear cuenta · Eskolak'))
 
 @section('content')
+    <div class="apple-account-page">
     <section class="container auth-section" aria-labelledby="register-title">
         <div class="auth-intro">
             <p class="eyebrow">{{ __('TU PRIMER PASO · ESKOLAK') }}</p>
@@ -42,4 +43,5 @@
             <p class="auth-description">{{ __('¿Ya tienes cuenta?') }} <a class="text-link" href="{{ route('login') }}">{{ __('Iniciar sesión') }}</a></p>
         </div>
     </section>
+    </div>
 @endsection

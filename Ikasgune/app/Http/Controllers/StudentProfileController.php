@@ -19,6 +19,7 @@ class StudentProfileController extends Controller
     public function update(Request $request): RedirectResponse
     {
         abort_unless($request->user()->isStudent(), 403);
+
         $data = $request->validate([
             'birth_date' => ['required', 'date_format:Y-m-d', 'before:today', 'after_or_equal:'.now()->subYears(120)->toDateString()],
             'school_class_id' => ['required', 'integer', 'exists:school_classes,id'],

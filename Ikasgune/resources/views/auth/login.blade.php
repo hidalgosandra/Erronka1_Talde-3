@@ -3,6 +3,7 @@
 @section('title', __('Iniciar sesión · Eskolak'))
 
 @section('content')
+    <div class="apple-account-page">
     <section class="container auth-section" aria-labelledby="login-title">
         <div class="auth-intro">
             <p class="eyebrow">{{ __('ONGI ETORRI BERRIRO · BIENVENIDO/A') }}</p>
@@ -14,7 +15,7 @@
             <h2>{{ __('Iniciar sesión') }}</h2>
             <p class="auth-description">{{ __('Introduce el correo y la contraseña de tu cuenta.') }}</p>
             @if(session('status'))
-                <p class="auth-status" role="status">{{ session('status') }}</p>
+                <output class="auth-status">{{ session('status') }}</output>
             @endif
             <form method="POST" action="{{ route('login.store') }}" class="auth-form">
                 @csrf
@@ -32,8 +33,11 @@
                 @error('remember')<p class="field-error" role="alert">{{ $message }}</p>@enderror
                 <button class="button" type="submit">{{ __('Entrar en mi espacio') }} <span aria-hidden="true">→</span></button>
             </form>
+            <div class="google-auth-divider"><span>{{ __('o también') }}</span></div>
+            <a class="google-login-button" href="{{ route('login.google.redirect') }}"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20">{{ __('Continuar con Google') }}</a>
             <p class="auth-description"><a class="text-link" href="{{ route('password.request') }}">{{ __('¿Has olvidado tu contraseña?') }}</a></p>
             <p class="auth-description">{{ __('¿Todavía no tienes cuenta?') }} <a class="text-link" href="{{ route('register') }}">{{ __('Regístrate') }}</a></p>
         </div>
     </section>
+    </div>
 @endsection

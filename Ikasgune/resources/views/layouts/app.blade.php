@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ app()->getLocale() }}" data-theme-locked="{{ request()->routeIs('admin.*') ? 'true' : 'false' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#f7f8f2" data-theme-color>
-    <link rel="icon" type="image/png" sizes="96x96" href="https://www.google.com/chrome/static/images/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('images/ikasgune-logo.png') }}">
     <meta name="description" content="{{ __('Eskolak, un espacio para aprender, compartir y crecer.') }}">
     <meta property="og:title" content="@yield('title', __('Eskolak · Tu espacio para aprender'))">
     <meta property="og:description" content="{{ __('Aprende, comparte y crece con Eskolak.') }}">

@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AccountProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminCourseController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\SessionController;
@@ -34,11 +36,15 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/register/verificar', [RegistrationController::class, 'verifyStore'])->middleware('throttle:10,1')->block(30, 10)->name('register.verify.store');
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store'])->name('login.store');
+    Route::get('/login/google', [GoogleAuthController::class, 'redirect'])->middleware('throttle:10,1')->name('login.google.redirect');
+    Route::get('/login/google/callback', [GoogleAuthController::class, 'callback'])->middleware('throttle:10,1')->name('login.google.callback');
 });
 
 Route::middleware('auth')->group(function (): void {
     Route::get('/perfil-academico', [StudentProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/perfil-academico', [StudentProfileController::class, 'update'])->name('profile.update');
+    Route::get('/perfil', [AccountProfileController::class, 'edit'])->name('account.profile.edit');
+    Route::put('/perfil', [AccountProfileController::class, 'update'])->name('account.profile.update');
     Route::post('/admin/clases', [SchoolClassController::class, 'store'])->middleware('can:access-admin')->name('admin.classes.store');
     Route::put('/admin/clases/{schoolClass}', [SchoolClassController::class, 'update'])->middleware('can:access-admin')->name('admin.classes.update');
     Route::get('/mis-cursos', [EnrollmentController::class, 'index'])->name('courses.mine');

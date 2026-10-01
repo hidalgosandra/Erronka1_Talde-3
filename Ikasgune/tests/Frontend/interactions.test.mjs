@@ -6,7 +6,7 @@ import { runInNewContext } from 'node:vm';
 const source = readFileSync(new URL('../../resources/js/app.js', import.meta.url), 'utf8');
 const themeSource = readFileSync(new URL('../../resources/js/theme.js', import.meta.url), 'utf8');
 
-function setup({ savedTheme = null, systemDark = false, blockedStorage = false, loading = false, withoutBundle = false } = {}) {
+function setup({ savedTheme = null, systemDark = false, blockedStorage = false, loading = false, withoutBundle = false, adminThemeLocked = false } = {}) {
     let document;
     class Element extends EventTarget {
         constructor() {
@@ -43,6 +43,7 @@ function setup({ savedTheme = null, systemDark = false, blockedStorage = false, 
     const themeColor = new Element();
     const documentElement = new Element();
     documentElement.dataset.theme = 'light';
+    documentElement.dataset.themeLocked = adminThemeLocked ? 'true' : 'false';
     const trigger = new Element();
     const cancel = new Element();
     const confirm = new Element();
@@ -201,11 +202,11 @@ test('saved choice overrides OS theme, including after back navigation', () => {
     assert.equal(ui.document.documentElement.dataset.theme, 'dark');
 });
 
-test('theme follows OS changes until a choice is saved and synchronizes tabs', () => {
+test('theme stays light by default until a choice is saved', () => {
     const ui = setup();
     ui.media.matches = true;
     ui.media.dispatchEvent(new Event('change'));
-    assert.equal(ui.document.documentElement.dataset.theme, 'dark');
+    assert.equal(ui.document.documentElement.dataset.theme, 'light');
     ui.themeOptions[0].dispatchEvent(new Event('click'));
     ui.media.dispatchEvent(new Event('change'));
     assert.equal(ui.document.documentElement.dataset.theme, 'light');
@@ -218,11 +219,22 @@ test('theme follows OS changes until a choice is saved and synchronizes tabs', (
 
 test('theme switching works with unavailable storage', () => {
     const ui = setup({ blockedStorage: true, systemDark: true });
-    assert.equal(ui.document.documentElement.dataset.theme, 'dark');
+    assert.equal(ui.document.documentElement.dataset.theme, 'light');
     ui.themeOptions[0].dispatchEvent(new Event('click'));
     assert.equal(ui.document.documentElement.dataset.theme, 'light');
     ui.window.dispatchEvent(new Event('pageshow'));
     assert.equal(ui.document.documentElement.dataset.theme, 'light');
+});
+
+test('admin pages stay light and ignore theme selection without changing the saved preference', () => {
+    const ui = setup({ savedTheme: 'dark', adminThemeLocked: true });
+    assert.equal(ui.document.documentElement.dataset.theme, 'light');
+    assert.equal(ui.themeOptions[0].attributes['aria-pressed'], 'true');
+    assert.equal(ui.themeOptions[0].disabled, true);
+    assert.equal(ui.themeOptions[1].disabled, true);
+    ui.themeOptions[1].dispatchEvent(new Event('click'));
+    assert.equal(ui.document.documentElement.dataset.theme, 'light');
+    assert.equal(ui.localStorage.getItem('eskolak-theme'), 'dark');
 });
 
 test('dark page and selector agree after DOM loads even without the Vite bundle', () => {

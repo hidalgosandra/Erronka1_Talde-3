@@ -136,7 +136,10 @@ if (adminTabs.length) {
         if (focus) tab.focus();
     };
     adminTabs.forEach((tab, index) => {
-        tab.addEventListener('click', () => activateTab(tab));
+        tab.addEventListener('click', (event) => {
+            event.preventDefault();
+            activateTab(tab);
+        });
         tab.addEventListener('keydown', (event) => {
             let target;
             if (event.key === 'ArrowRight') target = (index + 1) % adminTabs.length;
@@ -148,6 +151,12 @@ if (adminTabs.length) {
             activateTab(adminTabs[target], true);
         });
     });
+
+    const requestedTab = new URL(location.href).searchParams.get('tab');
+    const initialTab = adminTabs.find((tab) => tab.dataset.adminTab === requestedTab)
+        ?? adminTabs.find((tab) => tab.classList.contains('is-active'))
+        ?? adminTabs[0];
+    activateTab(initialTab);
 }
 
 if (dock) {
