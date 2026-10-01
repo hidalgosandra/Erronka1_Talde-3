@@ -811,3 +811,58 @@ h3 { margin: 24px 0 12px; font-size: 23px; font-weight: 650; letter-spacing: -.7
     .apple-account-page .auth-intro .hero-description { font-size: 16px; }
     .apple-account-page .auth-card { padding: 24px; }
 }
+
+/* Compact, expandable preferences island. */
+.island-anchor { position: relative; flex: 0 0 142px; height: 48px; z-index: 80; }
+.preferences-island { position: absolute; top: 0; right: 0; width: 142px; max-width: calc(100vw - 32px); border: 1px solid #ffffff24; border-radius: 26px; background: #101113; color: #f5f5f7; box-shadow: 0 8px 24px #00000024, inset 0 1px 0 #ffffff12; transition: width .38s cubic-bezier(.22, 1, .36, 1), border-radius .38s, box-shadow .3s; }
+.preferences-island[open] { width: 330px; border-radius: 28px; background: #101113f5; box-shadow: 0 22px 60px #00000045, inset 0 1px 0 #ffffff18; -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
+.island-trigger { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 46px; padding: 10px 14px; list-style: none; cursor: pointer; user-select: none; border-radius: 26px; }
+.island-trigger::-webkit-details-marker { display: none; }
+.island-trigger::marker { content: ''; }
+.island-trigger:hover { background: #ffffff0a; }
+.island-trigger:focus-visible { outline: 3px solid #79c7ff; outline-offset: 4px; }
+.island-status { width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: #7ee6b5; box-shadow: 0 0 9px #7ee6b566; }
+.island-locale { font-size: 12px; font-weight: 650; letter-spacing: .07em; }
+.island-divider { height: 16px; width: 1px; background: #ffffff26; }
+.island-trigger svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.island-trigger .island-chevron { width: 14px; color: #a1a1a6; transition: transform .3s; }
+.preferences-island[open] .island-chevron { transform: rotate(180deg); }
+.island-trigger .island-moon { display: none; }
+:root[data-theme='dark'] .island-trigger .island-sun { display: none; }
+:root[data-theme='dark'] .island-trigger .island-moon { display: block; }
+.island-panel { padding: 2px 18px 20px; }
+.preferences-island[open] .island-panel { animation: island-reveal .3s ease both; }
+.island-label { margin: 12px 4px 8px; color: #a9abb2; font-size: 11px; font-weight: 600; letter-spacing: .04em; }
+:root .preferences-island .language-switcher,
+:root .preferences-island .theme-toggle { display: flex; width: 100%; margin: 0; padding: 4px; gap: 4px; border: 1px solid #ffffff12; border-radius: 18px; background: #ffffff09; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+:root .preferences-island .language-switcher-icon,
+:root .preferences-island .language-option-code,
+:root .preferences-island .language-option-dot { display: none; }
+:root .preferences-island .language-options { display: flex; width: 100%; gap: 4px; }
+:root .preferences-island .language-option,
+:root .preferences-island .theme-option { display: flex; flex: 1; align-items: center; justify-content: center; min-width: 0; width: auto; min-height: 44px; padding: 10px 8px; border: 1px solid transparent; border-radius: 14px; background: transparent; color: #bfc1c8; font-size: 12px; box-shadow: none; transform: none; transition: background .2s, color .2s, transform .2s; }
+:root .preferences-island .language-option-name,
+:root .preferences-island .theme-option span { display: inline; }
+:root .preferences-island .language-option[aria-pressed='true'],
+:root .preferences-island .theme-option[aria-pressed='true'] { background: #34363c; border-color: #ffffff1c; color: #fff; box-shadow: 0 2px 8px #00000030, inset 0 1px 0 #ffffff0a; }
+:root .preferences-island .language-option:hover,
+:root .preferences-island .theme-option:hover { background: #ffffff18; color: #fff; transform: translateY(-1px); }
+:root .preferences-island .language-option:active,
+:root .preferences-island .theme-option:active { transform: scale(.96); }
+:root .preferences-island button:focus-visible { outline: 2px solid #79c7ff; outline-offset: 1px; }
+@keyframes island-reveal { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 540px) {
+    .island-anchor { flex-basis: 132px; }
+    .preferences-island { width: 132px; }
+    .preferences-island[open] { width: min(330px, calc(100vw - 36px)); }
+    .island-trigger { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .preferences-island, .island-trigger .island-chevron,
+    :root .preferences-island button { transition: none; }
+    .preferences-island[open] .island-panel { animation: none; }
+}
+@media (forced-colors: active) {
+    .preferences-island { border: 1px solid CanvasText; }
+    :root .preferences-island button[aria-pressed='true'] { border-color: Highlight; }
+}

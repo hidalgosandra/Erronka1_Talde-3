@@ -1,5 +1,22 @@
 const dock = document.querySelector('.bottom-nav');
 const themeToggle = document.querySelector('[data-theme-toggle]');
+const preferencesIsland = document.querySelector('[data-preferences-island]');
+
+if (preferencesIsland) {
+    document.addEventListener('click', (event) => {
+        if (!preferencesIsland.contains(event.target)) preferencesIsland.open = false;
+    });
+    preferencesIsland.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && preferencesIsland.open) {
+            event.preventDefault();
+            preferencesIsland.open = false;
+            preferencesIsland.querySelector('summary').focus();
+        }
+    });
+    preferencesIsland.addEventListener('focusout', (event) => {
+        if (event.relatedTarget && !preferencesIsland.contains(event.relatedTarget)) preferencesIsland.open = false;
+    });
+}
 
 if (themeToggle) {
     const themeOptions = [...themeToggle.querySelectorAll('[data-set-theme]')];

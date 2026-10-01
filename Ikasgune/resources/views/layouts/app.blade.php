@@ -46,7 +46,18 @@
         <div class="container header-inner">
             <a class="brand" href="{{ route('inicio') }}" aria-label="{{ __('Eskolak, inicio') }}"><img class="brand-logo" src="{{ asset('images/ikasgune-logo.png') }}" alt="" width="48" height="48"> eskolak<span class="brand-dot">.</span></a>
             <span class="header-caption">{{ __('Un lugar para ir más allá.') }}</span>
-            <div class="header-controls">
+            <div class="header-controls island-anchor">
+                <details class="preferences-island" data-preferences-island>
+                    <summary class="island-trigger" aria-label="{{ __('Cambiar idioma') }} · {{ __('Cambiar tema') }}">
+                        <span class="island-status" aria-hidden="true"></span>
+                        <span class="island-locale">{{ strtoupper(app()->getLocale()) }}</span>
+                        <span class="island-divider" aria-hidden="true"></span>
+                        <svg class="island-sun" aria-hidden="true"><use href="#icon-sun"/></svg>
+                        <svg class="island-moon" aria-hidden="true"><use href="#icon-moon"/></svg>
+                        <svg class="island-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg>
+                    </summary>
+                    <div class="island-panel">
+                        <p class="island-label">{{ __('Idioma') }}</p>
                 <form class="language-switcher" method="POST" action="{{ route('locale.update') }}" aria-label="{{ __('Cambiar idioma') }}">
                     @csrf
                     <input type="hidden" name="return_to" value="{{ request()->getRequestUri() }}">
@@ -64,6 +75,7 @@
                         @endforeach
                     </fieldset>
                 </form>
+                <p class="island-label">{{ __('Cambiar tema') }}</p>
                 <fieldset class="theme-toggle header-theme-toggle" data-theme-toggle>
                     <legend class="sr-only">{{ __('Cambiar tema') }}</legend>
                     <button class="theme-option" type="button" data-set-theme="light" aria-label="{{ __('Tema claro') }}" aria-pressed="true" title="{{ __('Tema claro') }}">
@@ -73,6 +85,8 @@
                         <svg aria-hidden="true"><use href="#icon-moon"/></svg><span>{{ __('Oscuro') }}</span>
                     </button>
                 </fieldset>
+                    </div>
+                </details>
             </div>
         </div>
     </header>
